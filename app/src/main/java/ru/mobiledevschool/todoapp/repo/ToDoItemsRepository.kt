@@ -2,7 +2,7 @@ package ru.mobiledevschool.todoapp.repo
 
 import ru.mobiledevschool.todoapp.ToDoItem
 import java.time.LocalDate
-import java.util.Date
+
 
 class ToDoItemsRepository {
     private val _toDoList = ArrayList<ToDoItem>()
