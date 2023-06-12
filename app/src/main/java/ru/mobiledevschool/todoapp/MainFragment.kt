@@ -1,19 +1,35 @@
 package ru.mobiledevschool.todoapp
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
+import ru.mobiledevschool.todoapp.repo.ToDoItemsRepository
 
 class MainFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    private lateinit var binding: FragmentMainBinding
+    private lateinit var recyclerView: RecyclerView
+    val repo = ToDoItemsRepository()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        recyclerView = binding.toDoRecyclerView
+        val toDoAdapter = ToDoItemAdapter(repo.getItems())
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        recyclerView.adapter = toDoAdapter
+        recyclerView.layoutManager = layoutManager
     }
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentMainBinding.inflate(inflater)
+        return binding.root
+    }
 }
