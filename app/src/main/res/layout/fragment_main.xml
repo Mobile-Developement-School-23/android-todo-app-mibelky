@@ -6,13 +6,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainFragment">
 
-    <ImageView
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:contentDescription="@string/add_fab_description"
-        android:src="@drawable/add_new_item"
+        app:backgroundTint="#CB74EC"
+        app:tint="#FFFFFF"
+        android:src="@drawable/fab_plus_24"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="40dp"
         />
