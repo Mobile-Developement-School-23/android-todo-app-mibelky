@@ -15,7 +15,7 @@ class ToDoItemsRepository {
                 add(
                     ToDoItem(
                         id++.toString(),
-                        "Не тупить целый день на лепре",
+                        "Съешь еще этих мягких французских булок да выпей чаю.",
                         ToDoItem.Priority.LOW,
                         null,
                         false,
@@ -26,10 +26,10 @@ class ToDoItemsRepository {
                 add(
                     ToDoItem(
                         id++.toString(),
-                        "Купить хлеба. Позвонить Геннадию.",
+                        "Не тупить целый день на лепре.",
                         ToDoItem.Priority.NORMAL,
                         null,
-                        false,
+                        true,
                         LocalDate.parse("2023-12-12"),
                         LocalDate.parse("2023-12-12")
                     )
