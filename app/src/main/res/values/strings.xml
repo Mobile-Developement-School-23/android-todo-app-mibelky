@@ -3,4 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_fab_description">Add new item</string>
+    <string name="item_text_hint">Что надо сделать...</string>
+    <string name="priority_header">Важность</string>
+    <string name="deadline_header_text">Сделать до</string>
+    <string name="delete_button_text">Удалить</string>
 </resources>

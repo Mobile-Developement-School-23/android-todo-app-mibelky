@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F7F6F2">
+
+    <TextView
+        android:id="@+id/back"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/item_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/item_container"
+        android:elevation="2dp"
+        android:fontFamily="@font/roboto"
+        android:gravity="top"
+        android:hint="@string/item_text_hint"
+        android:lineHeight="18dp"
+        android:minHeight="104dp"
+        android:padding="16dp"
+        android:textColor="#101010"
+        android:textFontWeight="400"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/back"
+        tools:text="Съешь же еще этих мягких французских булок да выпей чаю." />
+
+    <TextView
+        android:id="@+id/priority_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="28dp"
+        android:fontFamily="@font/roboto"
+        android:lineHeight="18.75dp"
+        android:text="@string/priority_header"
+        android:textColor="#101010"
+        android:textFontWeight="400"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@id/item_text" />
+
+    <TextView
+        android:id="@+id/priority"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto"
+        android:lineHeight="16.41dp"
+        android:text="Нет"
+        android:textColor="#4D000000"
+        android:textFontWeight="400"
+        android:textSize="14sp"
+        app:layout_constraintTop_toBottomOf="@id/priority_header" />
+
+    <ImageView
+        android:id="@+id/divider_priority"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="16dp"
+        android:background="@color/support_light_separator"
+        app:layout_constraintTop_toBottomOf="@id/priority" />
+
+    <TextView
+        android:id="@+id/deadline_header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="26.5dp"
+        android:fontFamily="@font/roboto"
+        android:lineHeight="18.75dp"
+        android:text="@string/deadline_header_text"
+        android:textColor="#101010"
+        android:textFontWeight="400"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_priority" />
+
+    <TextView
+        android:id="@+id/deadline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/roboto"
+        android:lineHeight="16.41dp"
+        android:text="2 июня 2021"
+        android:textColor="#CB74EC"
+        android:textFontWeight="400"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/deadline_header" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/deadline_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:layout_marginEnd="16dp"
+        android:checked="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/divider_priority" />
+
+    <ImageView
+        android:id="@+id/divider_deadline"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+
+        android:layout_marginTop="16dp"
+        android:background="@color/support_light_separator"
+        app:layout_constraintTop_toBottomOf="@id/deadline_switch" />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/delete_button_text"
+        app:icon="@drawable/trash_bin_24"
+        style="@style/Widget.App.IconButton"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="16dp"
+        android:textAllCaps="false"
+        android:fontFamily="@font/roboto"
+        android:textSize="16sp"
+        android:lineHeight="20dp"
+        android:textFontWeight="400"
+        android:letterSpacing="0"
+        app:layout_constraintTop_toBottomOf="@id/divider_deadline"
+        android:layout_marginTop="26dp"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

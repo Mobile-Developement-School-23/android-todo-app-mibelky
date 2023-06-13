@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
@@ -22,6 +23,10 @@ class MainFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = toDoAdapter
         recyclerView.layoutManager = layoutManager
+
+        binding.addNewItemFab.setOnClickListener {
+            findNavController().navigate(R.id.action_mainFragment_to_newItemFragment)
+        }
     }
 
     override fun onCreateView(
