@@ -10,4 +10,5 @@
     <string name="priority_menu_low_text">Нет</string>
     <string name="priority_menu_medium_text">Низкий</string>
     <string name="priority_menu_high_text">!! Высокий</string>
+    <string name="save_menu_action_text">СОХРАНИТЬ</string>
 </resources>

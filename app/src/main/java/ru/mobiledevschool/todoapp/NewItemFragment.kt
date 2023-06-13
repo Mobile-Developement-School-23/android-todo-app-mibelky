@@ -32,8 +32,19 @@ class NewItemFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         /** Top app bar handler */
-        binding.back.setOnClickListener {
+        binding.topAppBar.setNavigationOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.topAppBar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.save -> {
+                    findNavController().navigateUp()
+                    true
+                }
+
+                else -> false
+            }
         }
 
         /** Deadline switch handler and date picker invocation */
@@ -45,31 +56,30 @@ class NewItemFragment : Fragment() {
                     datePicker.show(requireActivity().supportFragmentManager, "deadline date")
                 }
 
-                else -> {}  //TO-DO
+                else -> {}  //TODO: Add switch logic
             }
         }
 
         /** Priority block click handler */
-        // TODO: Add menu programmatically
         registerForContextMenu(binding.priorityBlock)
 
         binding.priorityBlock.setOnClickListener {
             it.showContextMenu(0.0F, 0.0F)
         }
-        /** Handling longclick to prevent common context menu behavior */
+        /** Handling long click to prevent common context menu behavior */
         binding.priorityBlock.setOnLongClickListener { true }
 
         /** Delete button click handler*/
         binding.deleteButton.setOnClickListener {
             findNavController().navigateUp()
         }
-
-
-
-
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         val inflater = MenuInflater(requireContext())
         inflater.inflate(R.menu.priority_menu, menu)
@@ -80,13 +90,14 @@ class NewItemFragment : Fragment() {
         return when (item.itemId) {
             R.id.option_low -> {
                 // Respond to context menu item 1 click.
-
-                false
+                true
             }
+
             R.id.option_medium -> {
                 // Respond to context menu item 2 click.
-                false
+                true
             }
+
             else -> super.onContextItemSelected(item)
         }
     }
