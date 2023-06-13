@@ -19,9 +19,13 @@ class MainFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         recyclerView = binding.toDoRecyclerView
         val toDoAdapter = ToDoItemAdapter(repo.getItems())
+        val toDoItemListAdapter = ToDoItemListAdapter()
+
+        toDoItemListAdapter.submitList(repo.getItems())
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = toDoAdapter
+
+        recyclerView.adapter = toDoItemListAdapter
         recyclerView.layoutManager = layoutManager
 
         binding.addNewItemFab.setOnClickListener {
