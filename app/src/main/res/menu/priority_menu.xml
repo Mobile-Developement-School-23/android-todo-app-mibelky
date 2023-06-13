@@ -1,4 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+    <item android:id="@+id/option_low"
+        android:title="@string/priority_menu_low_text" />
+    <item android:id="@+id/option_medium"
+        android:title="@string/priority_menu_medium_text" />
+    <item android:id="@+id/option_high"
+        android:title="@string/priority_menu_high_text" />
 </menu>

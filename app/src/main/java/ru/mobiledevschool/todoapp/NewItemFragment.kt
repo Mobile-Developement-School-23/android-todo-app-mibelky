@@ -1,9 +1,14 @@
 package ru.mobiledevschool.todoapp
 
 import android.os.Bundle
+import android.view.ContextMenu
 import android.view.LayoutInflater
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -32,7 +37,7 @@ class NewItemFragment : Fragment() {
         }
 
         /** Deadline switch handler and date picker invocation */
-        binding.deadlineSwitch.setOnCheckedChangeListener { buttonView, isChecked ->
+        binding.deadlineSwitch.setOnCheckedChangeListener { _, isChecked ->
             when (isChecked) {
                 true -> {
                     val datePicker = MaterialDatePicker.Builder.datePicker()
@@ -44,11 +49,15 @@ class NewItemFragment : Fragment() {
             }
         }
 
-        /** Priority textViews block click handler */
+        /** Priority block click handler */
         // TODO: Add menu programmatically
-        binding.priorityHeader.setOnClickListener {
+        registerForContextMenu(binding.priorityBlock)
 
+        binding.priorityBlock.setOnClickListener {
+            it.showContextMenu(0.0F, 0.0F)
         }
+        /** Handling longclick to prevent common context menu behavior */
+        binding.priorityBlock.setOnLongClickListener { true }
 
         /** Delete button click handler*/
         binding.deleteButton.setOnClickListener {
@@ -58,5 +67,27 @@ class NewItemFragment : Fragment() {
 
 
 
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater = MenuInflater(requireContext())
+        inflater.inflate(R.menu.priority_menu, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        //val info = item.menuInfo as AdapterView.AdapterContextMenuInfo
+        return when (item.itemId) {
+            R.id.option_low -> {
+                // Respond to context menu item 1 click.
+
+                false
+            }
+            R.id.option_medium -> {
+                // Respond to context menu item 2 click.
+                false
+            }
+            else -> super.onContextItemSelected(item)
+        }
     }
 }
