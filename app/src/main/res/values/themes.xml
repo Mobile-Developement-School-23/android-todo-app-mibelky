@@ -21,15 +21,12 @@
         <item name="colorSecondary">@color/color_light_blue</item>
     </style>
 
-    <!-- SWITCH THEME OVERLAY -->
+    <!-- DELETE BUTTON STYLE -->
     <style name="Widget.App.IconButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?attr/deleteButtonColor</item>
-
         <item name="iconTint">@null</item>
         <item name="iconStartPadding">0dp</item>
         <item name="iconGravity">start</item>
-        <item name="backgroundTint">@color/mtrl_btn_text_btn_bg_color_selector</item>
-        <item name="rippleColor">@color/mtrl_btn_text_btn_ripple_color</item>
     </style>
 
     <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary" >

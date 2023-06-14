@@ -53,5 +53,9 @@ class ToDoItemsRepository {
         _toDoList.add(newItem)
     }
 
+    fun deleteItemByPosition(position: Int){
+        _toDoList.removeAt(position)
+    }
+
     fun getItems() = _toDoList
 }

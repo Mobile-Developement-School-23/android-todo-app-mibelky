@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="12dp">
+    android:paddingBottom="12dp"
+    android:background="@color/back_light_secondary">
 
     <ImageView
         android:id="@+id/checkBox"

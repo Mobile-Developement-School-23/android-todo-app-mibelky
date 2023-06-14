@@ -16,8 +16,8 @@
             style="@style/Widget.MaterialComponents.Toolbar.Primary"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@drawable/baseline_close_24"
             app:menu="@menu/top_bar_menu"
+            app:navigationIcon="@drawable/baseline_close_24"
 
             />
 
@@ -32,21 +32,21 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
 
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <EditText
+                android:id="@+id/item_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/item_container"
                 android:elevation="2dp"
                 android:fontFamily="@font/roboto"
                 android:gravity="top"
                 android:hint="@string/item_text_hint"
-                android:id="@+id/item_text"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="2dp"
-                android:layout_width="match_parent"
                 android:lineHeight="18dp"
                 android:minHeight="104dp"
                 android:padding="16dp"
@@ -58,21 +58,21 @@
 
             <LinearLayout
                 android:id="@+id/priority_block"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="28dp"
-                android:layout_width="wrap_content"
                 android:minWidth="100dp"
                 android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/item_text">
 
                 <TextView
+                    android:id="@+id/priority_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
                     android:fontFamily="@font/roboto"
-                    android:id="@+id/priority_header"
-                    android:layout_height="wrap_content"
-                    android:layout_width="match_parent"
                     android:lineHeight="18.75dp"
                     android:text="@string/priority_header"
                     android:textColor="#101010"
@@ -80,11 +80,11 @@
                     android:textSize="16sp" />
 
                 <TextView
-                    android:fontFamily="@font/roboto"
                     android:id="@+id/priority"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:layout_width="match_parent"
+                    android:fontFamily="@font/roboto"
                     android:lineHeight="16.41dp"
                     android:text="Нет"
                     android:textColor="#4D000000"
@@ -93,21 +93,21 @@
             </LinearLayout>
 
             <ImageView
-                android:background="@color/support_light_separator"
                 android:id="@+id/divider_priority"
+                android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
+                android:background="@color/support_light_separator"
                 app:layout_constraintTop_toBottomOf="@id/priority_block" />
 
             <TextView
-                android:fontFamily="@font/roboto"
                 android:id="@+id/deadline_header"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="26.5dp"
-                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:lineHeight="18.75dp"
                 android:text="@string/deadline_header_text"
                 android:textColor="#101010"
@@ -117,12 +117,12 @@
                 app:layout_constraintTop_toBottomOf="@id/divider_priority" />
 
             <TextView
-                android:fontFamily="@font/roboto"
                 android:id="@+id/deadline"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
-                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:lineHeight="16.41dp"
                 android:text="2 июня 2021"
                 android:textColor="#CB74EC"
@@ -132,35 +132,35 @@
                 app:layout_constraintTop_toBottomOf="@id/deadline_header" />
 
             <com.google.android.material.switchmaterial.SwitchMaterial
-                android:checked="false"
                 android:id="@+id/deadline_switch"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="26dp"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:layout_marginEnd="16dp"
+                android:checked="false"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider_priority" />
 
             <ImageView
-                android:background="@color/support_light_separator"
                 android:id="@+id/divider_deadline"
-                android:layout_height="0.5dp"
-
-                android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginTop="16dp"
+                android:background="@color/support_light_separator"
                 app:layout_constraintTop_toBottomOf="@id/deadline_switch" />
 
             <Button
-                style="@style/Widget.App.IconButton"
-                android:fontFamily="@font/roboto"
                 android:id="@+id/delete_button"
+                style="@style/Widget.App.IconButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="26dp"
-                android:layout_width="wrap_content"
+                android:fontFamily="@font/roboto"
                 android:letterSpacing="0"
                 android:lineHeight="20dp"
                 android:text="@string/delete_button_text"
+                android:paddingStart="0dp"
                 android:textAllCaps="false"
                 android:textFontWeight="400"
                 android:textSize="16sp"
