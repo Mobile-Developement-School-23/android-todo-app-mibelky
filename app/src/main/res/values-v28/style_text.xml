@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextAppearance.v28.ToDoApp.LargeTitle" parent="TextAppearance.ToDoApp.LargeTitle">
+        <item name="android:lineHeight">38dp</item>
+    </style>
+
+    <style name="TextAppearance.V28.ToDoApp.Title" parent="TextAppearance.ToDoApp.Title">
+        <item name="android:lineHeight">32dp</item>
+    </style>
+
+    <style name="TextAppearance.V28.ToDoApp.Button" parent="TextAppearance.ToDoApp.Button">
+        <item name="android:lineHeight">24dp</item>
+    </style>
+
+    <style name="TextAppearance.V28.ToDoApp.Body" parent="TextAppearance.ToDoApp.Body">
+        <item name="android:lineHeight">20dp</item>
+    </style>
+
+    <style name="TextAppearance.V28.ToDoApp.Subhead" parent="TextAppearance.ToDoApp.Subhead">
+        <item name="android:lineHeight">20dp</item>
+    </style>
+</resources>

@@ -61,7 +61,7 @@ class MainFragment : Fragment() {
         binding.showDoneButton.setOnClickListener {
             repo.changeDoneVisibility()
             (it as ImageButton).bindShowDoneImage(repo.showDone)
-            toDoItemListAdapter.notifyDataSetChanged()
+            //toDoItemListAdapter.notifyDataSetChanged()
         }
 
         /** AppBar behavior while scrolling */

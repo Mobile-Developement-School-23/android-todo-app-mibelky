@@ -5,12 +5,17 @@ import android.view.ViewGroup
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import ru.mobiledevschool.todoapp.databinding.ToDoItemBinding
+import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
 
 class ToDoItemViewHolder(private val binding: ToDoItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun onBind(toDoItem: ToDoItem) {
-        binding.itemText.text = toDoItem.text
-        binding.checkBox.bindCompletionImage(toDoItem.completed, toDoItem.priority)
+        binding.apply {
+            itemText.text = toDoItem.text
+            if (toDoItem.completed) itemText.paintFlags = itemText.paintFlags xor STRIKE_THRU_TEXT_FLAG
+            checkBox.bindCompletionImage(toDoItem.completed, toDoItem.priority)
+        }
+
     }
 }
 

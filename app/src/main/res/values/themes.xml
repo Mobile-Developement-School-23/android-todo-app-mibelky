@@ -2,14 +2,23 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.ToDoApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/back_light_primary</item>
-        <item name="colorOnPrimary">@color/color_light_blue</item>
+        <item name="colorOnPrimary">@color/label_light_primary</item>
+        <item name="colorSecondary">@color/back_light_secondary</item>
+        <item name="colorOnSecondary">@color/label_dark_secondary</item>
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
+
+        <item name="deleteButtonColor">@color/label_light_disable</item>
+        <!-- Switch color overlay -->
+        <item name="switchStyle">@style/Widget.App.Switch</item>
     </style>
 
     <style name="Theme.ToDoApp" parent="Base.Theme.ToDoApp">
-        <item name="switchStyle">@style/Widget.App.Switch</item>
-        <item name="deleteButtonColor">@color/label_light_disable</item>
+
     </style>
+
+
+
+
 
     <!-- SWITCH THEME OVERLAY -->
 
@@ -41,5 +50,8 @@
     <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
+
+
+
 
 </resources>
