@@ -6,7 +6,9 @@ import java.time.LocalDate
 
 class ToDoItemsRepository {
     private val _toDoList = ArrayList<ToDoItem>()
-
+    private var _showDone = true
+    val showDone: Boolean
+        get() = _showDone
     init {
         _toDoList.apply {
             var id = 1
