@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsets
+import android.widget.ImageButton
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
 import ru.mobiledevschool.todoapp.repo.ToDoItemsRepository
 import kotlin.math.abs
@@ -25,7 +28,6 @@ class MainFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeHelper: ItemTouchHelper
 
-    val repo = ToDoItemsRepository()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -36,12 +38,13 @@ class MainFragment : Fragment() {
         val deleteColor = resources.getColor(R.color.color_light_red,null)
         val checkColor = resources.getColor(R.color.color_light_green,null)
 
-
+        val repo = ToDoApp.getInstance()
         recyclerView = binding.toDoRecyclerView
 
         val toDoItemListAdapter = ToDoItemListAdapter()
 
-        toDoItemListAdapter.submitList(repo.getItems())
+
+        toDoItemListAdapter.submitList(repo.itemsToShow())
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
@@ -54,9 +57,13 @@ class MainFragment : Fragment() {
         }
 
         /** Show done button behavior */
+        binding.showDoneButton.bindShowDoneImage(repo.showDone)
         binding.showDoneButton.setOnClickListener {
-
+            repo.changeDoneVisibility()
+            (it as ImageButton).bindShowDoneImage(repo.showDone)
+            toDoItemListAdapter.notifyDataSetChanged()
         }
+
         /** AppBar behavior while scrolling */
         binding.appBarLayout.addOnOffsetChangedListener{ appBarLayout, verticalOffset ->
                 val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()

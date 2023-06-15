@@ -1,5 +1,6 @@
 package ru.mobiledevschool.todoapp
 
+import android.widget.ImageButton
 import android.widget.ImageView
 
 fun ImageView.bindCompletionImage(completed: Boolean, priority: ToDoItem.Priority) {
@@ -9,5 +10,13 @@ fun ImageView.bindCompletionImage(completed: Boolean, priority: ToDoItem.Priorit
         setImageResource(R.drawable.unchecked_high)
     } else {
         setImageResource(R.drawable.unchecked)
+    }
+}
+
+fun ImageButton.bindShowDoneImage(showDone: Boolean) {
+    if (showDone) {
+        setImageResource(R.drawable.unshow_done)
+    } else {
+        setImageResource(R.drawable.show_done)
     }
 }

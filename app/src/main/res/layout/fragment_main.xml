@@ -45,7 +45,7 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginBottom="16dp"
                 android:background="@android:color/transparent"
-                android:src="@drawable/show_done"
+                android:src="@drawable/unshow_done"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:tint="@color/color_light_blue" />

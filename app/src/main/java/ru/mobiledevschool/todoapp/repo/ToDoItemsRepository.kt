@@ -1,5 +1,7 @@
 package ru.mobiledevschool.todoapp.repo
 
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import ru.mobiledevschool.todoapp.ToDoItem
 import java.time.LocalDate
 
@@ -9,6 +11,8 @@ class ToDoItemsRepository {
     private var _showDone = true
     val showDone: Boolean
         get() = _showDone
+
+    val itemsToShow =  { if (_showDone) _toDoList else _toDoList.filter { !it.completed }}
     init {
         _toDoList.apply {
             var id = 1
@@ -55,9 +59,13 @@ class ToDoItemsRepository {
         _toDoList.add(newItem)
     }
 
-    fun deleteItemByPosition(position: Int){
+    fun deleteItemByPosition(position: Int) {
         _toDoList.removeAt(position)
     }
 
     fun getItems() = _toDoList
+
+    fun changeDoneVisibility() {
+        _showDone = !_showDone
+    }
 }
