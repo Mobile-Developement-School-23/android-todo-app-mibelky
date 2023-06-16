@@ -6,6 +6,7 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import ru.mobiledevschool.todoapp.databinding.ToDoItemBinding
 import android.graphics.Paint.STRIKE_THRU_TEXT_FLAG
+import androidx.core.view.marginStart
 
 class ToDoItemViewHolder(private val binding: ToDoItemBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -14,29 +15,30 @@ class ToDoItemViewHolder(private val binding: ToDoItemBinding) :
             itemText.text = toDoItem.text
             if (toDoItem.completed) itemText.paintFlags = itemText.paintFlags xor STRIKE_THRU_TEXT_FLAG
             checkBox.bindCompletionImage(toDoItem.completed, toDoItem.priority)
+            date.bindDeadLineDate(toDoItem.deadLine)
+            priorityIcon.bindPriorityImage(toDoItem.completed, toDoItem.priority)
         }
-
     }
 }
 
-class ToDoItemAdapter(private val toDoItems: ArrayList<ToDoItem>) :
-    RecyclerView.Adapter<ToDoItemViewHolder>() {
-
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoItemViewHolder {
-        val layoutInflater = LayoutInflater.from(parent.context)
-        val binding = ToDoItemBinding.inflate(layoutInflater, parent, false)
-        return ToDoItemViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment)
-        }
-        holder.onBind(toDoItems[position])
-    }
-
-    override fun getItemCount(): Int {
-        return toDoItems.size
-    }
-}
+//class ToDoItemAdapter(private val toDoItems: ArrayList<ToDoItem>) :
+//    RecyclerView.Adapter<ToDoItemViewHolder>() {
+//
+//
+//    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ToDoItemViewHolder {
+//        val layoutInflater = LayoutInflater.from(parent.context)
+//        val binding = ToDoItemBinding.inflate(layoutInflater, parent, false)
+//        return ToDoItemViewHolder(binding)
+//    }
+//
+//    override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
+//        holder.itemView.setOnClickListener {
+//            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment)
+//        }
+//        holder.onBind(toDoItems[position])
+//    }
+//
+//    override fun getItemCount(): Int {
+//        return toDoItems.size
+//    }
+//}

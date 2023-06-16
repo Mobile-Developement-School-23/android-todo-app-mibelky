@@ -3,52 +3,50 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/back_light_primary">
+    android:background="?attr/colorPrimary">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="128dp">
+        android:layout_height="@dimen/expanded_app_bar_size"
+        android:background="@android:color/transparent">
 
         <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/motion_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@android:color/transparent"
             android:minHeight="?attr/actionBarSize"
             app:layoutDescription="@xml/fragment_collapsing_motion_layout_scene"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <TextView
-                android:id="@+id/page_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto"
-                android:textSize="32sp"
-                android:textStyle="bold"
-                android:text="@string/page_title"
-                android:textColor="@color/label_light_primary" />
-
-            <TextView
                 android:id="@+id/done_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/roboto"
                 android:text="@string/done_text_mock"
-                android:textColor="@color/label_light_tertiary"
-                android:textSize="16sp"
- />
+                android:textAppearance="@style/TextAppearance.ToDoApp.Body"
+                android:textColor="?attr/colorLabelTertiary" />
+
+            <TextView
+                android:id="@+id/page_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/page_title"
+                android:textAppearance="@style/TextAppearance.ToDoApp.LargeTitle" />
 
             <ImageButton
                 android:id="@+id/show_done_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="2dp"
+                android:padding="16dp"
                 android:background="@android:color/transparent"
                 android:src="@drawable/unshow_done"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:tint="@color/color_light_blue" />
+                android:contentDescription="@string/show_done_button_desc" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/insets_guideline"
@@ -73,7 +71,8 @@
         android:layout_marginHorizontal="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/recycler_shape"
-        android:elevation="3dp"
+        android:elevation="4dp"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -85,7 +84,6 @@
         android:layout_marginBottom="40dp"
         android:contentDescription="@string/add_fab_description"
         android:src="@drawable/fab_plus_24"
-        app:backgroundTint="#CB74EC"
-        app:tint="#FFFFFF" />
+        style="@style/Theme.App.FloatActionButton" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

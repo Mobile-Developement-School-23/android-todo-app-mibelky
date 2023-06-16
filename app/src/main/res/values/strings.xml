@@ -13,4 +13,6 @@
     <string name="save_menu_action_text">СОХРАНИТЬ</string>
     <string name="page_title">Мои дела</string>
     <string name="done_text_mock">Выполнено - 5</string>
+    <string name="long_text_to_cut">Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст этого замечательного сообщения</string>
+    <string name="show_done_button_desc">Switch visibility</string>
 </resources>

@@ -23,7 +23,7 @@ class ToDoItemsRepository {
                         id++.toString(),
                         "Съешь еще этих мягких французских булок да выпей чаю.",
                         ToDoItem.Priority.LOW,
-                        null,
+                        LocalDate.parse("2023-12-12"),
                         false,
                         LocalDate.parse("2023-12-12"),
                         LocalDate.parse("2023-12-12")

@@ -5,7 +5,14 @@
         <item name="colorOnPrimary">@color/label_light_primary</item>
         <item name="colorSecondary">@color/back_light_secondary</item>
         <item name="colorOnSecondary">@color/label_dark_secondary</item>
+        <item name="colorLabelTertiary">@color/label_light_tertiary</item>
+        <item name="colorPriorityHigh">@color/color_light_red</item>
+        <item name="colorPriorityLow">@color/color_light_gray</item>
+        <item name="colorPurpleAccent">@color/color_light_blue</item>
+        <item name="colorGreenAccent">@color/color_light_green</item>
+
         <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
+
 
         <item name="deleteButtonColor">@color/label_light_disable</item>
         <!-- Switch color overlay -->
@@ -41,6 +48,11 @@
     <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary" >
         <item name="android:action">@color/color_light_blue</item>
     </style>
+
+    <style name="Theme.App.FloatActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="android:backgroundTint">?attr/colorPurpleAccent</item>
+
+</style>
 
     <!-- MAIN FRAGMENT APP BAR -->
     <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.MaterialComponents.Headline5">
