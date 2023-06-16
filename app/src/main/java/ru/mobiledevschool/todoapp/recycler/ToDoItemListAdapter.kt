@@ -38,6 +38,11 @@ class ToDoItemListAdapter : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemVi
         holder.onBind(toDoItem)
     }
 
+    override fun getItemId(position: Int): Long {
+        return getItem(position).id.toLong()
+        //return super.getItemId(position)
+    }
+
     class ToDoItemViewHolder(private val binding: ToDoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(toDoItem: ToDoItem) {

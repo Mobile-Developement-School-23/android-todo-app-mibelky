@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,16 +21,23 @@ import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.recycler.ToDoItemListAdapter
 import ru.mobiledevschool.todoapp.recycler.bindShowDoneImage
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
+import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.dp
+import java.time.LocalDate
 import kotlin.math.roundToInt
 
 class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeHelper: ItemTouchHelper
-
+    private lateinit var viewModel: MainViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        viewModel = ViewModelProvider(
+            this,
+            MainViewModel.Factory(ToDoApp.getLiveInstance())
+        )[MainViewModel::class.java]
 
         val displayMetrics = resources.displayMetrics
         val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp(resources)
@@ -40,36 +48,45 @@ class MainFragment : Fragment() {
         val deleteIcon = ResourcesCompat.getDrawable(resources, R.drawable.delete, null)
         val checkIcon = ResourcesCompat.getDrawable(resources, R.drawable.check, null)
 
-        val repo = ToDoApp.getInstance()
-        recyclerView = binding.toDoRecyclerView
+
+        /**                              RecyclerView                              */
 
         val toDoItemListAdapter = ToDoItemListAdapter()
-
-
-        toDoItemListAdapter.submitList(repo.itemsToShow())
+        //toDoItemListAdapter.submitList(viewModel.listToShow.value)
+        viewModel.listToShow.observe(viewLifecycleOwner) {
+            toDoItemListAdapter.submitList(it)
+        }
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-
+        recyclerView = binding.toDoRecyclerView
         recyclerView.adapter = toDoItemListAdapter
         recyclerView.layoutManager = layoutManager
 
-        /** FAB behavior */
+        /**                              FAB behavior                              */
+
         binding.addNewItemFab.setOnClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_newItemFragment)
         }
 
-        /** Show done button behavior */
-        binding.showDoneButton.bindShowDoneImage(repo.showDone)
-        binding.showDoneButton.setOnClickListener {
-            repo.changeDoneVisibility()
-            (it as ImageButton).bindShowDoneImage(repo.showDone)
-            //toDoItemListAdapter.notifyDataSetChanged()
+        /**                              Show done button behavior                              */
+
+        viewModel.showDone.observe(viewLifecycleOwner) {
+            binding.showDoneButton.bindShowDoneImage(it)
         }
 
-        /** AppBar behavior while scrolling */
+        binding.showDoneButton.setOnClickListener {
+            viewModel.changeVisibility()
+        }
+
+        /**                              AppBar behavior                                  */
+
         binding.appBarLayout.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val seekPosition = -verticalOffset / appBarLayout.totalScrollRange.toFloat()
             binding.motionLayout.progress = seekPosition
+        }
+
+        viewModel.doneQuantity.observe(viewLifecycleOwner) {
+            binding.doneText.text = getString(R.string.done_text_mock,it)
         }
 
 
@@ -113,8 +130,8 @@ class MainFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                repo.deleteItemByPosition(position)
-                toDoItemListAdapter.notifyItemRemoved(position)
+                val id = (recyclerView.adapter as ToDoItemListAdapter).getItemId(position).toInt()
+                viewModel.deleteItemById(id)
             }
 
             override fun onChildDraw(

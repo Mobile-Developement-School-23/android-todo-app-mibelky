@@ -49,11 +49,12 @@ fun TextView.bindItemText(itemText: String, completed: Boolean) {
     text = itemText
     val typedColorValue = TypedValue()
     if (completed) {
-        paintFlags = paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
+        paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
         context.theme.resolveAttribute(R.attr.colorLabelTertiary, typedColorValue,true)
         setTextColor(typedColorValue.data)
     }
     else {
+        paintFlags = paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
         context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedColorValue,true)
         setTextColor(typedColorValue.data)
     }

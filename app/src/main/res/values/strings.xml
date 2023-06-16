@@ -3,7 +3,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_fab_description">Add new item</string>
-    <string name="item_text_hint">Что надо сделать...</string>
+    <string name="item_text_hint">Что надо сделать…</string>
     <string name="priority_header">Важность</string>
     <string name="deadline_header_text">Сделать до</string>
     <string name="delete_button_text">Удалить</string>
@@ -12,7 +12,7 @@
     <string name="priority_menu_high_text">!! Высокий</string>
     <string name="save_menu_action_text">СОХРАНИТЬ</string>
     <string name="page_title">Мои дела</string>
-    <string name="done_text_mock">Выполнено - 5</string>
+    <string name="done_text_mock">Выполнено - %d</string>
     <string name="long_text_to_cut">Купить что-то, где-то, зачем-то, но зачем не очень понятно, но точно чтобы показать как обрезается текст этого замечательного сообщения</string>
     <string name="show_done_button_desc">Switch visibility</string>
 </resources>
