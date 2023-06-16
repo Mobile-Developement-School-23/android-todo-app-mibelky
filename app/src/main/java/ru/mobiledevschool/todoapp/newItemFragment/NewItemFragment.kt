@@ -1,4 +1,4 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.newItemFragment
 
 import android.os.Bundle
 import android.view.ContextMenu

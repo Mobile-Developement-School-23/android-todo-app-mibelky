@@ -1,4 +1,4 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.utility
 
 import android.content.res.Resources
 import android.util.TypedValue

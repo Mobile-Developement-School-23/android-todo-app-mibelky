@@ -17,10 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.ToDoApp
-import ru.mobiledevschool.todoapp.ToDoItemListAdapter
-import ru.mobiledevschool.todoapp.bindShowDoneImage
+import ru.mobiledevschool.todoapp.recycler.ToDoItemListAdapter
+import ru.mobiledevschool.todoapp.recycler.bindShowDoneImage
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
-import ru.mobiledevschool.todoapp.dp
+import ru.mobiledevschool.todoapp.utility.dp
 import kotlin.math.roundToInt
 
 class MainFragment : Fragment() {

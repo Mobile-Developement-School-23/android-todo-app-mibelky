@@ -1,4 +1,4 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.repo
 
 import java.time.LocalDate
 

@@ -16,6 +16,6 @@
     </fragment>
     <fragment
         android:id="@+id/newItemFragment"
-        android:name="ru.mobiledevschool.todoapp.NewItemFragment"
+        android:name="ru.mobiledevschool.todoapp.newItemFragment.NewItemFragment"
         android:label="NewItemFragment" />
 </navigation>

@@ -51,7 +51,7 @@
 
     <style name="Theme.App.FloatActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:backgroundTint">?attr/colorPurpleAccent</item>
-
+        <item name="android:tint">?attr/colorPrimary</item>
 </style>
 
     <!-- MAIN FRAGMENT APP BAR -->

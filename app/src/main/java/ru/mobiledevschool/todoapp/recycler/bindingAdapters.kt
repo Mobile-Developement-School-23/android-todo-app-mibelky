@@ -1,13 +1,13 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.recycler
 
 import android.graphics.Paint
-import android.opengl.Visibility
 import android.util.TypedValue
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import ru.mobiledevschool.todoapp.R
+import ru.mobiledevschool.todoapp.repo.ToDoItem
 import java.time.LocalDate
-import java.util.Date
 
 fun ImageView.bindCompletionImage(completed: Boolean, priority: ToDoItem.Priority) {
     if (completed) {

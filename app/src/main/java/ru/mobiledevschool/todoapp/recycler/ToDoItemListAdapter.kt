@@ -1,4 +1,4 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,9 +6,13 @@ import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import ru.mobiledevschool.todoapp.R
+import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.databinding.ToDoItemBinding
 
-class ToDoItemListAdapter : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemViewHolder>(DiffCallback) {
+class ToDoItemListAdapter : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemViewHolder>(
+    DiffCallback
+) {
 
     companion object DiffCallback : DiffUtil.ItemCallback<ToDoItem>() {
         override fun areItemsTheSame(oldItem: ToDoItem, newItem: ToDoItem): Boolean {
