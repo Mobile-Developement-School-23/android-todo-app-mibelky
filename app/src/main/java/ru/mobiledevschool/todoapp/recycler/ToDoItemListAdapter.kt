@@ -2,6 +2,7 @@ package ru.mobiledevschool.todoapp.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,7 +11,7 @@ import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.databinding.ToDoItemBinding
 
-class ToDoItemListAdapter : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemViewHolder>(
+class ToDoItemListAdapter(val checkBoxClickListener: (id: Int) -> Unit) : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemViewHolder>(
     DiffCallback
 ) {
 
@@ -32,18 +33,27 @@ class ToDoItemListAdapter : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemVi
 
     override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
         val toDoItem = getItem(position)
-        holder.itemView.setOnClickListener {
-            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment)
+        val id = getItemId(position).toInt()
+        holder.binding.checkBox.setOnClickListener {
+            checkBoxClickListener(id)
+            notifyItemChanged(position)
+        }
+        holder.binding.priorityTextBlock.setOnClickListener {
+            val bundle = bundleOf("id" to id.toString())
+            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
+        }
+        holder.binding.infoIcon.setOnClickListener {
+            val bundle = bundleOf("id" to id.toString())
+            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
         }
         holder.onBind(toDoItem)
     }
 
     override fun getItemId(position: Int): Long {
         return getItem(position).id.toLong()
-        //return super.getItemId(position)
     }
 
-    class ToDoItemViewHolder(private val binding: ToDoItemBinding) :
+    class ToDoItemViewHolder(val binding: ToDoItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun onBind(toDoItem: ToDoItem) {
             binding.apply {

@@ -81,13 +81,20 @@ class LiveDataRepository {
 
     fun deleteItemByPosition(position: Int) {
         arrayList.removeAt(position)
-        updateList()
+         updateList()
         updateDoneSize()
     }
 
     fun deleteItemById(id: Int) {
         arrayList.removeIf {  it.id == id.toString() }
         updateList()
+        updateDoneSize()
+    }
+
+    fun checkItemById(id: Int) {
+        val item = arrayList.find {  it.id == id.toString() }
+        item?.completed = !item?.completed!!
+        if (!_showDone.value!!) updateList()
         updateDoneSize()
     }
 

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.core.content.res.ResourcesCompat
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -51,7 +52,7 @@ class MainFragment : Fragment() {
 
         /**                              RecyclerView                              */
 
-        val toDoItemListAdapter = ToDoItemListAdapter()
+        val toDoItemListAdapter = ToDoItemListAdapter { id: Int -> viewModel.checkItemById(id) }
         //toDoItemListAdapter.submitList(viewModel.listToShow.value)
         viewModel.listToShow.observe(viewLifecycleOwner) {
             toDoItemListAdapter.submitList(it)
@@ -65,7 +66,8 @@ class MainFragment : Fragment() {
         /**                              FAB behavior                              */
 
         binding.addNewItemFab.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_newItemFragment)
+            val bundle = bundleOf("id" to null)
+            findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
         }
 
         /**                              Show done button behavior                              */
@@ -130,8 +132,15 @@ class MainFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.bindingAdapterPosition
-                val id = (recyclerView.adapter as ToDoItemListAdapter).getItemId(position).toInt()
-                viewModel.deleteItemById(id)
+                val id = toDoItemListAdapter.getItemId(position).toInt()
+                when (direction) {
+                    ItemTouchHelper.LEFT -> viewModel.deleteItemById(id)
+                    ItemTouchHelper.RIGHT -> {
+                        viewModel.checkItemById(id)
+                        toDoItemListAdapter.notifyItemChanged(position)
+                    }
+                }
+
             }
 
             override fun onChildDraw(

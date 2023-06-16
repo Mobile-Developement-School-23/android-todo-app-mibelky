@@ -25,6 +25,10 @@ class MainViewModel(private val repo: LiveDataRepository) : ViewModel() {
     fun deleteItemById(id: Int) {
         repo.deleteItemById(id)
     }
+
+    fun checkItemById(id: Int) {
+        repo.checkItemById(id)
+    }
     fun changeVisibility() {
         repo.changeVisibility()
     }

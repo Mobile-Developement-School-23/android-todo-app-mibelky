@@ -12,10 +12,21 @@
         tools:layout="@layout/fragment_main" >
         <action
             android:id="@+id/action_mainFragment_to_newItemFragment"
-            app:destination="@id/newItemFragment" />
+            app:destination="@id/newItemFragment" >
+            <argument
+                android:name="id"
+                app:argType="string"
+                android:defaultValue="@null" />
+        </action>
     </fragment>
     <fragment
         android:id="@+id/newItemFragment"
         android:name="ru.mobiledevschool.todoapp.newItemFragment.NewItemFragment"
-        android:label="NewItemFragment" />
+        android:label="NewItemFragment" >
+        <argument
+            android:name="id"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
+    </fragment>
 </navigation>
