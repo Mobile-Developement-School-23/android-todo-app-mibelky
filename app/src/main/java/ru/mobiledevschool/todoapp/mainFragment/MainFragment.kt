@@ -1,24 +1,26 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.mainFragment
 
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsets
 import android.widget.ImageButton
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import ru.mobiledevschool.todoapp.R
+import ru.mobiledevschool.todoapp.ToDoApp
+import ru.mobiledevschool.todoapp.ToDoItemListAdapter
+import ru.mobiledevschool.todoapp.bindShowDoneImage
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
+import ru.mobiledevschool.todoapp.dp
 import kotlin.math.roundToInt
 
 class MainFragment : Fragment() {

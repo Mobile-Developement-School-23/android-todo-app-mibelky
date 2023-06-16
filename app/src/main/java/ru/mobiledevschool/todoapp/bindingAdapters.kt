@@ -1,6 +1,8 @@
 package ru.mobiledevschool.todoapp
 
+import android.graphics.Paint
 import android.opengl.Visibility
+import android.util.TypedValue
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -40,6 +42,20 @@ fun TextView.bindDeadLineDate(date: LocalDate?) {
     else {
         visibility = TextView.VISIBLE
         text = date.toString()
+    }
+}
+
+fun TextView.bindItemText(itemText: String, completed: Boolean) {
+    text = itemText
+    val typedColorValue = TypedValue()
+    if (completed) {
+        paintFlags = paintFlags xor Paint.STRIKE_THRU_TEXT_FLAG
+        context.theme.resolveAttribute(R.attr.colorLabelTertiary, typedColorValue,true)
+        setTextColor(typedColorValue.data)
+    }
+    else {
+        context.theme.resolveAttribute(com.google.android.material.R.attr.colorOnPrimary, typedColorValue,true)
+        setTextColor(typedColorValue.data)
     }
 }
 
