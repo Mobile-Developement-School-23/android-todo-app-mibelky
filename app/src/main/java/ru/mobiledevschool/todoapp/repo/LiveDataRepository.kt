@@ -7,6 +7,7 @@ import androidx.lifecycle.map
 import androidx.lifecycle.switchMap
 import kotlinx.coroutines.flow.asFlow
 import java.time.LocalDate
+import java.util.Date
 
 class LiveDataRepository {
     private val _toDoList = MutableLiveData<List<ToDoItem>>()
@@ -29,10 +30,10 @@ class LiveDataRepository {
                     ToDoItem(
                         id++.toString(),
                         "Съешь еще этих мягких французских булок да выпей чаю.",
-                        ToDoItem.Priority.LOW, LocalDate.parse("2023-12-12"),
+                        ToDoItem.Priority.LOW, Date(1686969422L),
                         false,
-                        LocalDate.parse("2023-12-12"),
-                        LocalDate.parse("2023-12-12")
+                        Date(1686969422L),
+                        Date(1686969422L)
                     )
                 )
                 add(
@@ -42,8 +43,8 @@ class LiveDataRepository {
                         ToDoItem.Priority.NORMAL,
                         null,
                         true,
-                        LocalDate.parse("2023-12-12"),
-                        LocalDate.parse("2023-12-12")
+                        Date(1686969422L),
+                        Date(1686969422L)
                     )
                 )
                 add(
@@ -53,8 +54,8 @@ class LiveDataRepository {
                         ToDoItem.Priority.HIGH,
                         null,
                         false,
-                        LocalDate.parse("2023-12-12"),
-                        LocalDate.parse("2023-12-12")
+                        Date(1686969422L),
+                        Date(1686969422L)
                     )
                 )
             }
@@ -65,7 +66,7 @@ class LiveDataRepository {
 
     fun addToDoItem(newItem: ToDoItem) {
         arrayList.add(newItem)
-        _toDoList.value = arrayList
+        updateList()
         updateDoneSize()
     }
 
@@ -77,12 +78,6 @@ class LiveDataRepository {
     private fun updateList() {
         if (_showDone.value!!) _toDoList.value = arrayList.toList()
         else _toDoList.value = arrayList.filter { !it.completed }
-    }
-
-    fun deleteItemByPosition(position: Int) {
-        arrayList.removeAt(position)
-         updateList()
-        updateDoneSize()
     }
 
     fun deleteItemById(id: Int) {
@@ -98,9 +93,7 @@ class LiveDataRepository {
         updateDoneSize()
     }
 
-    fun getItemById(id: String): ToDoItem? = _toDoList.value?.find { it.id == id }
-
-    fun getAll() = MutableLiveData(arrayList.toList())
+    fun getItemById(id: String): ToDoItem? = arrayList.find {  it.id == id }
 
     private fun updateDoneSize() {
         _doneSize.value = arrayList.filter { it.completed }.size

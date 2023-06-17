@@ -7,8 +7,8 @@
     <string name="priority_header">Важность</string>
     <string name="deadline_header_text">Сделать до</string>
     <string name="delete_button_text">Удалить</string>
-    <string name="priority_menu_low_text">Нет</string>
-    <string name="priority_menu_medium_text">Низкий</string>
+    <string name="priority_menu_low_text">Низкий</string>
+    <string name="priority_menu_medium_text">Нет</string>
     <string name="priority_menu_high_text">!! Высокий</string>
     <string name="save_menu_action_text">СОХРАНИТЬ</string>
     <string name="page_title">Мои дела</string>

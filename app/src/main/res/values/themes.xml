@@ -10,11 +10,9 @@
         <item name="colorPriorityLow">@color/color_light_gray</item>
         <item name="colorPurpleAccent">@color/color_light_blue</item>
         <item name="colorGreenAccent">@color/color_light_green</item>
-
-        <item name="actionBarTheme">@style/ThemeOverlay.Actionbar</item>
-
-
-        <item name="deleteButtonColor">@color/label_light_disable</item>
+        <item name="colorDisabled">@color/label_light_disable</item>
+        <!-- DatePicker color overlay -->
+        <item name="materialCalendarTheme">@style/ThemeOverlay.App.DatePicker</item>
         <!-- Switch color overlay -->
         <item name="switchStyle">@style/Widget.App.Switch</item>
     </style>
@@ -24,9 +22,6 @@
     </style>
 
 
-
-
-
     <!-- SWITCH THEME OVERLAY -->
 
     <style name="Widget.App.Switch" parent="Widget.MaterialComponents.CompoundButton.Switch">
@@ -34,36 +29,49 @@
     </style>
 
     <style name="ThemeOverlay.App.Switch" parent="">
-        <item name="colorSecondary">@color/color_light_blue</item>
+        <item name="colorSecondary">?attr/colorPurpleAccent</item>
     </style>
 
-    <!-- DELETE BUTTON STYLE -->
-    <style name="Widget.App.IconButton" parent="@style/Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">?attr/deleteButtonColor</item>
-        <item name="iconTint">@null</item>
-        <item name="iconStartPadding">0dp</item>
-        <item name="iconGravity">start</item>
-    </style>
-
-    <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary" >
-        <item name="android:action">@color/color_light_blue</item>
+    <style name="ThemeOverlay.Actionbar" parent="ThemeOverlay.MaterialComponents.Toolbar.Primary">
+        <item name="android:actionMenuTextColor">?attr/colorPurpleAccent</item>
+        <item name="android:colorControlNormal">?attr/colorPurpleAccent</item>
     </style>
 
     <style name="Theme.App.FloatActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
         <item name="android:backgroundTint">?attr/colorPurpleAccent</item>
         <item name="android:tint">?attr/colorPrimary</item>
-</style>
-
-    <!-- MAIN FRAGMENT APP BAR -->
-    <style name="TextAppearance.App.CollapsingToolbar.Expanded" parent="TextAppearance.MaterialComponents.Headline5">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
-    <style name="TextAppearance.App.CollapsingToolbar.Collapsed" parent="TextAppearance.MaterialComponents.Headline6">
-        <item name="android:textColor">?attr/colorOnPrimary</item>
+<!--    <style name="DatePickerStyle" parent="Theme.AppCompat.Light.Dialog">-->
+<!--        <item name="colorAccent">?attr/colorPurpleAccent</item>-->
+<!--        <item name="colorSecondary">?attr/colorPurpleAccent</item>-->
+<!--        <item name="colorControlActivated">?attr/colorPurpleAccent</item>-->
+<!--        <item name="colorControlHighlight">?attr/colorPurpleAccent</item>-->
+<!--        <item name="android:windowBackground">?attr/colorSecondary</item>-->
+<!--        <item name="android:textColor">?attr/colorSecondary</item>-->
+<!--        <item name="android:colorPrimary">?attr/colorPurpleAccent</item>-->
+<!--        <item name="android:textColorSecondary">?attr/colorLabelTertiary</item>-->
+<!--        <item name="android:textColorPrimary">?attr/colorLabelTertiary</item>-->
+<!--        <item name="android:textColorPrimaryInverse">?attr/colorSecondary</item>-->
+<!--        <item name="android:textColorSecondaryInverse">?attr/colorSecondary</item>-->
+<!--        <item name="android:buttonBarNegativeButtonStyle">@style/DatePickerTheme.ButtonBarButton-->
+<!--        </item>-->
+<!--        <item name="android:buttonBarPositiveButtonStyle">@style/DatePickerTheme.ButtonBarButton-->
+<!--        </item>-->
+<!--    </style>-->
+
+<!--    <style name="DatePickerTheme.ButtonBarButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">-->
+<!--        <item name="android:textColor">?attr/colorPurpleAccent</item>-->
+<!--    </style>-->
+
+    <style name="ThemeOverlay.App.DatePicker" parent="@style/ThemeOverlay.MaterialComponents.MaterialCalendar">
+        <item name="colorPrimary">?attr/colorPurpleAccent</item>
+        <item name="colorOnPrimary">?attr/colorPrimary</item>
+        <item name="materialCalendarMonthNavigationButton"></item>
+<!--        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.App.SmallComponent</item>-->
+<!--        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.App.MediumComponent</item>-->
+        <!-- Customize text field of the text input mode. -->
+<!--        <item name="textInputStyle">@style/Widget.App.TextInputLayout</item>-->
     </style>
-
-
-
 
 </resources>

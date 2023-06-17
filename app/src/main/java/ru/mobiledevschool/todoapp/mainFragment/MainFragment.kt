@@ -88,11 +88,10 @@ class MainFragment : Fragment() {
         }
 
         viewModel.doneQuantity.observe(viewLifecycleOwner) {
-            binding.doneText.text = getString(R.string.done_text_mock,it)
+            binding.doneText.text = getString(R.string.done_text_mock, it)
         }
 
 
-        // Desired collapsed height of toolbar
         val toolBarHeight = binding.motionLayout.minimumHeight
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.motionLayout) { _, insets ->
@@ -115,13 +114,13 @@ class MainFragment : Fragment() {
             insets
         }
 
-        /** Swipe behavior in RecyclerView*/
+        /**                      Swipe behavior in RecyclerView                              */
 
         swipeHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
             0,
             ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
         ) {
-            //more code here
+
             override fun onMove(
                 recyclerView: RecyclerView,
                 viewHolder: RecyclerView.ViewHolder,
@@ -152,11 +151,10 @@ class MainFragment : Fragment() {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-                //1. Background color based upon direction swiped
+
                 if (dX < 0) canvas.drawColor(deleteColor)
                 if (dX > 0) canvas.drawColor(checkColor)
 
-                //2. Printing the icons
                 val textMargin = resources.getDimension(R.dimen.text_margin).roundToInt()
 
                 checkIcon?.let {
@@ -177,7 +175,6 @@ class MainFragment : Fragment() {
                     )
                 }
 
-                //3. Drawing icon based upon direction swiped
                 if (dX < 0) deleteIcon?.draw(canvas) else checkIcon?.draw(canvas)
 
                 super.onChildDraw(

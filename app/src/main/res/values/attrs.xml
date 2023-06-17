@@ -6,4 +6,5 @@
     <attr name="colorPriorityLow" format="reference|color" />
     <attr name="colorPurpleAccent" format="reference|color" />
     <attr name="colorGreenAccent" format="reference|color" />
+    <attr name="colorDisabled" format="reference|color" />
 </resources>
