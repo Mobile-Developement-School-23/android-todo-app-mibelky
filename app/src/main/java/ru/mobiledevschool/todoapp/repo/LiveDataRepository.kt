@@ -3,10 +3,6 @@ package ru.mobiledevschool.todoapp.repo
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
-import kotlinx.coroutines.flow.asFlow
-import java.time.LocalDate
 import java.util.Date
 
 class LiveDataRepository {
@@ -21,7 +17,14 @@ class LiveDataRepository {
     private val _showDone = MutableLiveData<Boolean>(true)
     val showDone: LiveData<Boolean> = _showDone
 
+    private lateinit var remoteList: List<ToDoItem>
+
+    /*    suspend fun getItems() {
+        remoteList = Api.retrofitService.getItems().list
+    }*/
+
     init {
+
         arrayList.apply {
             var id = 1
             repeat(4) {

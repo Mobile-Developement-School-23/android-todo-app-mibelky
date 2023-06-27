@@ -2,6 +2,8 @@ package ru.mobiledevschool.todoapp.mainFragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import ru.mobiledevschool.todoapp.repo.LiveDataRepository
 
 class MainViewModel(private val repo: LiveDataRepository) : ViewModel() {
@@ -11,6 +13,10 @@ class MainViewModel(private val repo: LiveDataRepository) : ViewModel() {
     val listToShow = repo.toDoList
 
     val doneQuantity = repo.doneSize
+
+//    fun getItems() = viewModelScope.launch{
+//        repo.getItems()
+//    }
 
     fun deleteItemById(id: Int) {
         repo.deleteItemById(id)

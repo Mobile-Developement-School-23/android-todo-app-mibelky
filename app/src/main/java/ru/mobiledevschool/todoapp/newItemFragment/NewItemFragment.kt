@@ -1,6 +1,5 @@
 package ru.mobiledevschool.todoapp.newItemFragment
 
-import android.icu.text.SimpleDateFormat
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.LayoutInflater
@@ -8,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.DatePicker
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,7 +21,6 @@ import ru.mobiledevschool.todoapp.recycler.bindPriorityText
 import ru.mobiledevschool.todoapp.recycler.enable
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.toDateFormat
-import java.util.Locale
 
 class NewItemFragment : Fragment() {
 

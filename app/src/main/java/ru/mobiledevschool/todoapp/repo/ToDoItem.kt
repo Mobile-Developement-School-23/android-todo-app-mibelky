@@ -1,6 +1,8 @@
 package ru.mobiledevschool.todoapp.repo
 
+import com.google.gson.annotations.SerializedName
 import java.util.Date
+
 
 data class ToDoItem(
     val id : String,
