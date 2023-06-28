@@ -3,9 +3,9 @@ package ru.mobiledevschool.todoapp
 import android.app.Application
 import ru.mobiledevschool.todoapp.repo.LiveDataRepository
 
-class ToDoApp: Application() {
+class ToDoApp : Application() {
 
-    companion object Repo {
+    companion object {
 
         @Volatile
         private var liveInstance: LiveDataRepository? = null
@@ -15,5 +15,6 @@ class ToDoApp: Application() {
                 liveInstance ?: LiveDataRepository().also { liveInstance = it }
             }
     }
+
 
 }

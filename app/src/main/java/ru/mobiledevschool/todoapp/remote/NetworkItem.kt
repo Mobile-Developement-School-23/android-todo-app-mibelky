@@ -1,7 +1,6 @@
 package ru.mobiledevschool.todoapp.remote
 
 import com.google.gson.annotations.SerializedName
-import java.util.Date
 
 data class NetworkItem(
     @SerializedName("id")
@@ -11,7 +10,7 @@ data class NetworkItem(
     @SerializedName("importance")
     val importance: String?,
     @SerializedName("deadline")
-    val deadLine: Date?,
+    val deadLine: Long?,
     @SerializedName("done")
     val completed: Boolean?,
     @SerializedName("color")
@@ -24,12 +23,7 @@ data class NetworkItem(
     val lastUpdatedBy: String?
 )
 
-data class NetworkItemsListResponse(
-    @SerializedName("status")
-    val status: String?,
-    @SerializedName("list")
-    val list: List<NetworkItem>?,
-    @SerializedName("revision")
-    val revision: Int?
-)
+
+
+
 
