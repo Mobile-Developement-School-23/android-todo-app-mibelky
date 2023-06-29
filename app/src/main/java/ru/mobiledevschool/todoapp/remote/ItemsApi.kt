@@ -16,13 +16,11 @@ interface ItemsApi {
     @GET("list/")
     suspend fun getItems(): NetworkItemsListContainer
 
-    @Headers("X-Last-Known-Revision: 0")
     @PATCH("list/")
     suspend fun updateItems(list: List<NetworkItem>): MutableLiveData<NetworkItemsListContainer>
 
-    @Headers("Authorization: Bearer clagging")
     @GET("list/{id}/")
-    suspend fun getItem(@Path("id") id: String): MutableLiveData<NetworkItemResponseContainer>
+    suspend fun getItem(@Path("id") id: String): NetworkItemResponseContainer
 
     @POST("list/")
     suspend fun addItem(
@@ -30,7 +28,6 @@ interface ItemsApi {
         @Body item: NetworkItemRequestContainer
     ): MutableLiveData<NetworkItemResponseContainer>
 
-    @Headers("Authorization: Bearer clagging")
     @PUT("list/{id}")
     suspend fun updateItem(
         @Path("id") id: String,

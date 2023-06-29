@@ -2,14 +2,15 @@ package ru.mobiledevschool.todoapp.repo
 
 import ru.mobiledevschool.todoapp.remote.NetworkItem
 import java.util.Date
+import java.util.UUID
 
 
 data class ToDoItem(
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
     var text: String,
+    var completed: Boolean,
     var priority: Priority,
     var deadLine: Date? = null,
-    var completed: Boolean,
     val creationDate: Date,
     val editionDate: Date?
 ) {

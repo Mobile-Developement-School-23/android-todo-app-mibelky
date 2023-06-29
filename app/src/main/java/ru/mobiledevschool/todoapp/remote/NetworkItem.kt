@@ -30,9 +30,9 @@ data class NetworkItem(
         text = this.text,
         priority = this.importance.toPriority(),
         deadLine = this.deadLine?.let {Date(it)},
-        completed = this.completed,
         creationDate = Date(this.createdAt),
-        editionDate = Date(this.changedAt)
+        editionDate = Date(this.changedAt),
+        completed = this.completed
     )
 
     private fun String.toPriority() = when (this) {

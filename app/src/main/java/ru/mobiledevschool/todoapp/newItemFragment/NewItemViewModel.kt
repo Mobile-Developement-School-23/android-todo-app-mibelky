@@ -29,7 +29,7 @@ class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
     private val _saveEvent = MutableLiveData<Boolean>(false)
     val saveEvent: LiveData<Boolean> = _saveEvent
 
-    fun getItemById(id: String) {
+    fun getItemById(id: String) = viewModelScope.launch {
         _item.value = repo.getItemById(id)
     }
 
@@ -43,9 +43,14 @@ class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
         val calendar = Calendar.getInstance()
         val newItem =
             ToDoItem(
-                Random.nextInt(20,300).toString(), text, priority.value ?: ToDoItem.Priority.NORMAL,
-                Date(date.value?:calendar.timeInMillis),completed = false,Date(calendar.timeInMillis),null)
-        repo.addToDoItem(newItem)
+                text = text,
+                completed = false,
+                priority = priority.value ?: ToDoItem.Priority.NORMAL,
+                deadLine = Date(date.value ?: calendar.timeInMillis),
+                creationDate = Date(calendar.timeInMillis),
+                editionDate = Date(calendar.timeInMillis)
+            )
+        viewModelScope.launch { repo.addItem(newItem) }
     }
 
     fun updateById(text: String) {
@@ -71,7 +76,6 @@ class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
     fun endSaveEvent() {
         _saveEvent.value = false
     }
-
 
     class Factory(private val repo: LiveDataRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
