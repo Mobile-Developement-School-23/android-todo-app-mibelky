@@ -9,11 +9,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.remote.AuthInterceptor
+import ru.mobiledevschool.todoapp.remote.NetworkItemRequestContainer
 import java.util.Date
+import java.util.concurrent.TimeUnit
 
-class LiveDataRepository() {
+class LiveDataRepository: ToDoRepository {
 
     lateinit var itemsApi: ItemsApi
+
+    private var revision = 0
 
     private val _toDoList = MutableLiveData<List<ToDoItem>>()
     val toDoList: LiveData<List<ToDoItem>> = _toDoList
@@ -23,57 +27,63 @@ class LiveDataRepository() {
     private val _doneSize = MutableLiveData<Int>()
     val doneSize: LiveData<Int> = _doneSize
 
-    private val _showDone = MutableLiveData<Boolean>(true)
+    private val _showDone = MutableLiveData(true)
     val showDone: LiveData<Boolean> = _showDone
 
-    suspend fun getItems() {
-        //remoteList = itemsApi.getItems().value.list
+    private val _remoteList = MutableLiveData<List<ToDoItem>>()
+    val remoteList: LiveData<List<ToDoItem>> = _remoteList
+
+
+    override suspend fun refreshItems() {
+        val response = itemsApi.getItems()
+        _remoteList.value = response.list?.map {it.toDomainItem()}
+        updateRevision(response.revision)
     }
 
-    suspend fun getSize() {
-        val remoteObject = itemsApi.getItems().value.toString()
-        Log.w("Remote", "$remoteObject")
-    }
+//    suspend fun addItem() {
+//        val response = itemsApi.addItem(NetworkItemRequestContainer(arrayList[0].toNetworkItem()))
+//        Log.w("Remote", response.toString())
+//    }
     init {
         configureRetrofit()
-        arrayList.apply {
-            var id = 1
-            repeat(4) {
-                Log.i("Repository", "items added")
-                add(
-                    ToDoItem(
-                        id++.toString(),
-                        "Съешь еще этих мягких французских булок да выпей чаю.",
-                        ToDoItem.Priority.LOW, Date(1686969422L),
-                        false,
-                        Date(1686969422L),
-                        Date(1686969422L)
-                    )
-                )
-                add(
-                    ToDoItem(
-                        id++.toString(),
-                        "Не тупить целый день на лепре.",
-                        ToDoItem.Priority.NORMAL,
-                        null,
-                        true,
-                        Date(1686969422L),
-                        Date(1686969422L)
-                    )
-                )
-                add(
-                    ToDoItem(
-                        id++.toString(),
-                        "Родился на улице Герцена, в гастрономе номер двадцать два. Известный экономист, по призванию своему — библиотекарь. В народе — колхозник. В магазине — продавец. В экономике, так сказать, необходим.",
-                        ToDoItem.Priority.HIGH,
-                        null,
-                        false,
-                        Date(1686969422L),
-                        Date(1686969422L)
-                    )
-                )
-            }
-        }
+//        arrayList.apply {
+//            var id = 1
+//            repeat(4) {
+//                Log.i("Repository", "items added")
+//                add(
+//                    ToDoItem(
+//                        id++.toString(),
+//                        "Съешь еще этих мягких французских булок да выпей чаю.",
+//                        ToDoItem.Priority.LOW, Date(1686969422L),
+//                        false,
+//                        Date(1686969422L),
+//                        Date(1686969422L)
+//                    )
+//                )
+//                add(
+//                    ToDoItem(
+//                        id++.toString(),
+//                        "Не тупить целый день на лепре.",
+//                        ToDoItem.Priority.NORMAL,
+//                        null,
+//                        true,
+//                        Date(1686969422L),
+//                        Date(1686969422L)
+//                    )
+//                )
+//                add(
+//                    ToDoItem(
+//                        id++.toString(),
+//                        "Родился на улице Герцена, в гастрономе номер двадцать два. Известный экономист, по призванию своему — библиотекарь. В народе — колхозник. В магазине — продавец. В экономике, так сказать, необходим.",
+//                        ToDoItem.Priority.HIGH,
+//                        null,
+//                        false,
+//                        Date(1686969422L),
+//                        Date(1686969422L)
+//                    )
+//                )
+//            }
+//        }
         updateList()
         updateDoneSize()
     }
@@ -94,10 +104,14 @@ class LiveDataRepository() {
         else _toDoList.value = arrayList.filter { !it.completed }
     }
 
-    fun deleteItemById(id: Int) {
-        arrayList.removeIf { it.id == id.toString() }
-        updateList()
-        updateDoneSize()
+    suspend fun deleteItemById(id: Int) {
+        val response = itemsApi.deleteItem(revision, id.toString())
+        updateRevision(response.revision)
+        refreshItems()
+    }
+
+    private fun updateRevision(value: Int) {
+        revision = value
     }
 
     fun checkItemById(id: Int) {
@@ -118,8 +132,12 @@ class LiveDataRepository() {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val okHttpClient = OkHttpClient.Builder()
+            .callTimeout(0, TimeUnit.MILLISECONDS)
+            .connectTimeout(15000, TimeUnit.MILLISECONDS)
+            .readTimeout(15000, TimeUnit.MILLISECONDS)
+            .writeTimeout(15000, TimeUnit.MILLISECONDS)
             .addInterceptor(httpLoggingInterceptor)
-            //.addInterceptor(AuthInterceptor())
+            .addInterceptor(AuthInterceptor())
             .build()
 
         val retrofit = Retrofit.Builder()

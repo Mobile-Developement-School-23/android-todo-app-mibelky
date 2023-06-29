@@ -10,19 +10,18 @@ class MainViewModel(private val repo: LiveDataRepository) : ViewModel() {
 
     val showDone = repo.showDone
 
-    val listToShow = repo.toDoList
+    val listToShow = repo.remoteList
+        //repo.toDoList
 
     val doneQuantity = repo.doneSize
 
     init {
-        getItems()
-    }
-    fun getItems() = viewModelScope.launch{
-        //repo.getItems()
-        repo.getSize()
+        viewModelScope.launch {
+            repo.refreshItems()
+        }
     }
 
-    fun deleteItemById(id: Int) {
+    fun deleteItemById(id: Int) = viewModelScope.launch {
         repo.deleteItemById(id)
     }
 

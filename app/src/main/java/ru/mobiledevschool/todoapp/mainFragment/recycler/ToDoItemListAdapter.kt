@@ -1,4 +1,4 @@
-package ru.mobiledevschool.todoapp.recycler
+package ru.mobiledevschool.todoapp.mainFragment.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

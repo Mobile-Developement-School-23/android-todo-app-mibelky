@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.ToDoApp
-import ru.mobiledevschool.todoapp.recycler.ToDoItemListAdapter
-import ru.mobiledevschool.todoapp.recycler.bindShowDoneImage
+import ru.mobiledevschool.todoapp.mainFragment.recycler.ToDoItemListAdapter
+import ru.mobiledevschool.todoapp.mainFragment.recycler.bindShowDoneImage
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.dp

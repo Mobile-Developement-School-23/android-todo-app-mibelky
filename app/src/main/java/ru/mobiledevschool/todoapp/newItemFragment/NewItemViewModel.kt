@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import ru.mobiledevschool.todoapp.repo.LiveDataRepository
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import java.util.Calendar
@@ -31,7 +33,7 @@ class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
         _item.value = repo.getItemById(id)
     }
 
-    fun deleteItemById() {
+    fun deleteItemById() = viewModelScope.launch {
         item.value?.let {
             repo.deleteItemById(it.id.toInt())
         }

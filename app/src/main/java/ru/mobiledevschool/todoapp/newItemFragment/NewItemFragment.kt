@@ -15,10 +15,10 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.databinding.FragmentNewItemBinding
-import ru.mobiledevschool.todoapp.recycler.bindDate
-import ru.mobiledevschool.todoapp.recycler.bindDeadLineDate
-import ru.mobiledevschool.todoapp.recycler.bindPriorityText
-import ru.mobiledevschool.todoapp.recycler.enable
+import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDate
+import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDeadLineDate
+import ru.mobiledevschool.todoapp.mainFragment.recycler.bindPriorityText
+import ru.mobiledevschool.todoapp.mainFragment.recycler.enable
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.toDateFormat
 
