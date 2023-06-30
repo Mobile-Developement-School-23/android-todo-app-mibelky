@@ -28,6 +28,9 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
     private val _saveEvent = MutableLiveData<Boolean>(false)
     val saveEvent: LiveData<Boolean> = _saveEvent
 
+    private val _navigationEvent = MutableLiveData<Boolean>(false)
+    val navigationEvent: LiveData<Boolean> = _navigationEvent
+
     fun getItemById(id: String) = viewModelScope.launch {
         _item.value = repo.getItemById(id)
     }
@@ -36,7 +39,7 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
         item.value?.let {
             repo.deleteItemById(it.id)
         }
-    }
+    }.invokeOnCompletion { startNavigationEvent() }
 
     fun addNewItem(text: String) {
         val calendar = Calendar.getInstance()
@@ -49,7 +52,7 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
                 creationDate = Date(calendar.timeInMillis),
                 editionDate = Date(calendar.timeInMillis)
             )
-        viewModelScope.launch { repo.addItem(newItem) }
+        viewModelScope.launch { repo.addItem(newItem) }.invokeOnCompletion { startNavigationEvent() }
     }
 
     fun updateById(text: String) {
@@ -74,6 +77,14 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     fun endSaveEvent() {
         _saveEvent.value = false
+    }
+
+    fun startNavigationEvent() {
+        _navigationEvent.value = true
+    }
+
+    fun endNavigationEvent() {
+        _navigationEvent.value = false
     }
 
     class Factory(private val repo: ToDoRepositoryImpl) : ViewModelProvider.Factory {

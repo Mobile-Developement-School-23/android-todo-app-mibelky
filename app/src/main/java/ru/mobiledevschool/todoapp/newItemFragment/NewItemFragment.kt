@@ -78,6 +78,14 @@ class NewItemFragment : Fragment() {
             }
         }
 
+        viewModel.navigationEvent.observe(viewLifecycleOwner) {
+            navigate ->
+            if (navigate) {
+                viewModel.endNavigationEvent()
+                findNavController().navigateUp()
+            }
+        }
+
         viewModel.date.observe(viewLifecycleOwner) {
             binding.deadline.bindDate(it.toDateFormat())
         }
@@ -85,14 +93,13 @@ class NewItemFragment : Fragment() {
         /**                                Top app bar handler                               */
 
         binding.topAppBar.setNavigationOnClickListener {
-            findNavController().navigateUp()
+            viewModel.startNavigationEvent()
         }
 
         binding.topAppBar.setOnMenuItemClickListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.save -> {
                     viewModel.startSaveEvent()
-                    findNavController().navigateUp()
                     true
                 }
 
@@ -104,11 +111,9 @@ class NewItemFragment : Fragment() {
 
         binding.deleteText.setOnClickListener {
             viewModel.deleteItemById()
-            findNavController().navigateUp()
         }
         binding.deleteIcon.setOnClickListener {
             viewModel.deleteItemById()
-            findNavController().navigateUp()
         }
 
         /**                Deadline switch handler and date picker invocation                */
