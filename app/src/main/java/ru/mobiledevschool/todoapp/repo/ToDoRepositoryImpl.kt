@@ -3,16 +3,18 @@ package ru.mobiledevschool.todoapp.repo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.remote.AuthInterceptor
+import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.remote.NetworkItemRequestContainer
+import ru.mobiledevschool.todoapp.remote.Result
 import java.util.concurrent.TimeUnit
 
 class ToDoRepositoryImpl : ToDoRepository {
@@ -37,36 +39,84 @@ class ToDoRepositoryImpl : ToDoRepository {
     private val _remoteList = MutableLiveData<List<ToDoItem>>(emptyList<ToDoItem>())
     val remoteList: LiveData<List<ToDoItem>> = _remoteList
 
-
+    private val _httpExceptionCodeEvent = MutableLiveData<Int?>(null)
+    val httpExceptionCodeEvent: LiveData<Int?>
+        get() = _httpExceptionCodeEvent
+    private fun startHttpExceptionCodeEvent(code: Int) { _httpExceptionCodeEvent.value = code }
+    fun endHttpExceptionCodeEvent() { _httpExceptionCodeEvent.value = null }
     init {
         configureRetrofit()
     }
 
-    override suspend fun addItem(item: ToDoItem) = withContext(dispatcher) {
-        val networkItem = item.toNetworkItem()
+
+    override suspend fun addItem(toDoItem: ToDoItem) {
+        val networkItem = toDoItem.toNetworkItem()
         val networkItemRequestContainer = NetworkItemRequestContainer(networkItem)
-        val response = itemsApi.addItem(
-            revision,
-            networkItemRequestContainer
-        )
+
+        when (val response = safeApiCall(dispatcher) {
+            itemsApi.addItem(
+                revision,
+                networkItemRequestContainer
+            )
+        }) {
+            is Result.Success -> {
+                updateRevision(response.data.revision)
+                refreshItems()
+                //Do something with the responce if needed response.data.element.toDomainItem()
+            }
+
+            is Result.Error -> {
+                startHttpExceptionCodeEvent((response.exception as HttpException).code())
+            }
+            is Result.Other -> {refreshItems()}
+        }
     }
 
     override suspend fun refreshItems() {
-        val response = itemsApi.getItems()
-        _remoteList.value = response.list?.map { it.toDomainItem() }
-        updateRevision(response.revision)
+        val response = safeApiCall(dispatcher) { itemsApi.getItems() }
+        when (response) {
+            is Result.Success -> {
+                updateRevision(response.data.revision)
+                _remoteList.value = response.data.list?.map { it.toDomainItem() }
+            }
+
+            is Result.Error -> {
+                startHttpExceptionCodeEvent((response.exception as HttpException).code())
+            }
+            is Result.Other -> {}
+        }
     }
+
 
     override suspend fun deleteItemById(id: String) {
-        val response = itemsApi.deleteItem(revision, id)
-        updateRevision(response.revision)
-        refreshItems()
+        val response = safeApiCall(dispatcher) { itemsApi.deleteItem(revision, id) }
+        when (response) {
+            is Result.Success -> {
+                updateRevision(response.data.revision)
+                refreshItems()
+            }
+
+            is Result.Error -> {
+                startHttpExceptionCodeEvent((response.exception as HttpException).code())
+            }
+            is Result.Other -> {}
+        }
     }
 
-    override suspend fun getItemById(id: String): ToDoItem {
-        val response = itemsApi.getItem(id)
-        updateRevision(response.revision)
-        return response.element.toDomainItem()
+    override suspend fun getItemById(id: String): ToDoItem? {
+        val response = safeApiCall(dispatcher) { itemsApi.getItem(id) }
+        when (response) {
+            is Result.Success -> {
+                updateRevision(response.data.revision)
+                return response.data.element.toDomainItem()
+            }
+
+            is Result.Error -> {
+                startHttpExceptionCodeEvent((response.exception as HttpException).code())
+                return null
+            }
+            is Result.Other -> {return null}
+        }
     }
 
     private fun updateRevision(value: Int) {
@@ -112,5 +162,18 @@ class ToDoRepositoryImpl : ToDoRepository {
             .build()
 
         itemsApi = retrofit.create(ItemsApi::class.java)
+    }
+
+    private suspend fun <T> safeApiCall(
+        dispatcher: CoroutineDispatcher,
+        apiCall: suspend () -> T
+    ): Result<T> {
+        return withContext(dispatcher) {
+            try {
+                Result.Success(apiCall.invoke())
+            } catch (exception: Exception) {
+                Result.Error(exception)
+            }
+        }
     }
 }

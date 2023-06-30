@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
@@ -81,6 +82,15 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
 
         viewModel.doneQuantity.observe(viewLifecycleOwner) {
             binding.doneText.text = getString(R.string.done_text_mock, it)
+        }
+
+        /**                              Snackbar HTTP code                                  */
+        viewModel.httpExceptionCodeEvent.observe(viewLifecycleOwner) {
+            it?.let {
+                Snackbar.make(binding.root, it.toString(), Snackbar.LENGTH_SHORT)
+                    .show()
+                viewModel.endHttpExceptionCodeEvent()
+            }
         }
 
 

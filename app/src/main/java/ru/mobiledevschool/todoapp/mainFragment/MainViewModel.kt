@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 
 class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
@@ -12,6 +13,9 @@ class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     val listToShow = repo.remoteList
     //repo.toDoList
+
+    val httpExceptionCodeEvent = repo.httpExceptionCodeEvent
+    fun endHttpExceptionCodeEvent() = repo.endHttpExceptionCodeEvent()
 
     val doneQuantity = repo.doneSize
 
