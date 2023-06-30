@@ -6,13 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.mobiledevschool.todoapp.repo.LiveDataRepository
 import ru.mobiledevschool.todoapp.repo.ToDoItem
+import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 import java.util.Calendar
 import java.util.Date
-import kotlin.random.Random
 
-class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
+class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     private val _item = MutableLiveData<ToDoItem?>(null)
     val item: LiveData<ToDoItem?> = _item
@@ -35,7 +34,7 @@ class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
 
     fun deleteItemById() = viewModelScope.launch {
         item.value?.let {
-            repo.deleteItemById(it.id.toInt())
+            repo.deleteItemById(it.id)
         }
     }
 
@@ -77,7 +76,7 @@ class NewItemViewModel(private val repo: LiveDataRepository) : ViewModel() {
         _saveEvent.value = false
     }
 
-    class Factory(private val repo: LiveDataRepository) : ViewModelProvider.Factory {
+    class Factory(private val repo: ToDoRepositoryImpl) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(NewItemViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")

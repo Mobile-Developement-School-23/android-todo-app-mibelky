@@ -11,7 +11,10 @@ import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.databinding.ToDoItemBinding
 
-class ToDoItemListAdapter(val checkBoxClickListener: (id: Int) -> Unit) : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemViewHolder>(
+class ToDoItemListAdapter(
+    private val checkBoxHandler: (ToDoItem) -> Unit,
+    private val infoHandler: (ToDoItem) -> Unit,
+) : ListAdapter<ToDoItem, ToDoItemListAdapter.ToDoItemViewHolder>(
     DiffCallback
 ) {
 
@@ -33,24 +36,17 @@ class ToDoItemListAdapter(val checkBoxClickListener: (id: Int) -> Unit) : ListAd
 
     override fun onBindViewHolder(holder: ToDoItemViewHolder, position: Int) {
         val toDoItem = getItem(position)
-        val id = getItemId(position).toInt()
         holder.binding.checkBox.setOnClickListener {
-            checkBoxClickListener(id)
+            checkBoxHandler(toDoItem)
             notifyItemChanged(position)
         }
         holder.binding.priorityTextBlock.setOnClickListener {
-            val bundle = bundleOf("id" to id.toString())
-            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
+            infoHandler(toDoItem)
         }
         holder.binding.infoIcon.setOnClickListener {
-            val bundle = bundleOf("id" to id.toString())
-            it.findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
+            infoHandler(toDoItem)
         }
         holder.onBind(toDoItem)
-    }
-
-    override fun getItemId(position: Int): Long {
-        return getItem(position).id.toLong()
     }
 
     class ToDoItemViewHolder(val binding: ToDoItemBinding) :

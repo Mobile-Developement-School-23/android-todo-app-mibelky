@@ -2,7 +2,7 @@ package ru.mobiledevschool.todoapp.remote
 
 import com.google.gson.annotations.SerializedName
 
-data class NetworkItemsListContainer(
+data class NetworkItemListResponseContainer(
     @SerializedName("status")
     val status: String,
     @SerializedName("list")

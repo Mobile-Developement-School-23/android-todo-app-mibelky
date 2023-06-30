@@ -3,18 +3,21 @@ package ru.mobiledevschool.todoapp.repo
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.remote.AuthInterceptor
-import ru.mobiledevschool.todoapp.remote.NetworkItem
 import ru.mobiledevschool.todoapp.remote.NetworkItemRequestContainer
-import java.util.UUID
 import java.util.concurrent.TimeUnit
 
-class LiveDataRepository : ToDoRepository {
+class ToDoRepositoryImpl : ToDoRepository {
+
+    private val dispatcher = Dispatchers.IO
 
     lateinit var itemsApi: ItemsApi
 
@@ -35,15 +38,17 @@ class LiveDataRepository : ToDoRepository {
     val remoteList: LiveData<List<ToDoItem>> = _remoteList
 
 
-    suspend fun addItem(item: ToDoItem) {
-        val networkItem = item.toNetworkItem()
-        val networkItemRequestContainer = NetworkItemRequestContainer(networkItem)
-        val response = itemsApi.addItem(revision,
-            networkItemRequestContainer)
-    }
-
     init {
         configureRetrofit()
+    }
+
+    override suspend fun addItem(item: ToDoItem) = withContext(dispatcher) {
+        val networkItem = item.toNetworkItem()
+        val networkItemRequestContainer = NetworkItemRequestContainer(networkItem)
+        val response = itemsApi.addItem(
+            revision,
+            networkItemRequestContainer
+        )
     }
 
     override suspend fun refreshItems() {
@@ -52,13 +57,13 @@ class LiveDataRepository : ToDoRepository {
         updateRevision(response.revision)
     }
 
-    suspend fun deleteItemById(id: Int) {
-        val response = itemsApi.deleteItem(revision, id.toString())
+    override suspend fun deleteItemById(id: String) {
+        val response = itemsApi.deleteItem(revision, id)
         updateRevision(response.revision)
         refreshItems()
     }
 
-    suspend fun getItemById(id: String): ToDoItem {
+    override suspend fun getItemById(id: String): ToDoItem {
         val response = itemsApi.getItem(id)
         updateRevision(response.revision)
         return response.element.toDomainItem()
@@ -68,9 +73,8 @@ class LiveDataRepository : ToDoRepository {
         revision = value
     }
 
-    fun addToDoItem(newItem: ToDoItem) {
-        arrayList.add(newItem)
-        updateList()
+    override suspend fun changeItem(toDoItem: ToDoItem) {
+        TODO("Not yet implemented")
     }
 
     fun changeVisibility() {
@@ -83,10 +87,9 @@ class LiveDataRepository : ToDoRepository {
         else _toDoList.value = arrayList.filter { !it.completed }
     }
 
-    fun checkItemById(id: Int) {
-        val item = arrayList.find { it.id == id.toString() }
-        item?.completed = !item?.completed!!
-        if (!_showDone.value!!) updateList()
+    fun checkItemById(id: String) {
+        val item = arrayList.find { it.id == id }
+        //GET ITEM AND UPDATE
     }
 
     private fun configureRetrofit() {

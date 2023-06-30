@@ -4,35 +4,40 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import ru.mobiledevschool.todoapp.repo.LiveDataRepository
+import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 
-class MainViewModel(private val repo: LiveDataRepository) : ViewModel() {
+class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     val showDone = repo.showDone
 
     val listToShow = repo.remoteList
-        //repo.toDoList
+    //repo.toDoList
 
     val doneQuantity = repo.doneSize
 
     init {
-        viewModelScope.launch {
-            repo.refreshItems()
-        }
+        refreshItems()
     }
 
-    fun deleteItemById(id: Int) = viewModelScope.launch {
+    private fun refreshItems() = viewModelScope.launch {
+        repo.refreshItems()
+    }
+
+
+    fun deleteItemById(id: String) = viewModelScope.launch {
         repo.deleteItemById(id)
     }
 
-    fun checkItemById(id: Int) {
+
+    fun checkItemById(id: String) {
         repo.checkItemById(id)
     }
+
     fun changeVisibility() {
         repo.changeVisibility()
     }
 
-    class Factory(private val repo: LiveDataRepository) : ViewModelProvider.Factory {
+    class Factory(private val repo: ToDoRepositoryImpl) : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
