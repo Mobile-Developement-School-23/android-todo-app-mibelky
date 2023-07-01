@@ -12,9 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.databinding.FragmentNewItemBinding
+import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDeadLineDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindPriorityText
@@ -25,7 +27,8 @@ import ru.mobiledevschool.todoapp.utility.toDateFormat
 class NewItemFragment : Fragment() {
 
     private lateinit var binding: FragmentNewItemBinding
-    private lateinit var viewModel: NewItemViewModel
+
+    private val viewModel by viewModel<NewItemViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,11 +41,6 @@ class NewItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            this,
-            NewItemViewModel.Factory(ToDoApp.getLiveInstance())
-        )[NewItemViewModel::class.java]
 
         arguments?.getString("id")?.let {
             viewModel.getItemById(it)
@@ -87,7 +85,7 @@ class NewItemFragment : Fragment() {
         }
 
         viewModel.date.observe(viewLifecycleOwner) {
-            binding.deadline.bindDate(it.toDateFormat())
+            it?.let { binding.deadline.bindDate(it.toDateFormat())}
         }
 
         /**                                Top app bar handler                               */

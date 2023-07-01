@@ -22,8 +22,8 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
     private val _highlightDeleteButton = MutableLiveData(false)
     val enableDelete: LiveData<Boolean> = _highlightDeleteButton
 
-    private val _date = MutableLiveData<Long>()
-    val date: LiveData<Long> = _date
+    private val _date = MutableLiveData<Long?>()
+    val date: LiveData<Long?> = _date
 
     private val _saveEvent = MutableLiveData<Boolean>(false)
     val saveEvent: LiveData<Boolean> = _saveEvent
@@ -33,11 +33,16 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     fun getItemById(id: String) = viewModelScope.launch {
         _item.value = repo.getItemById(id)
+        _item.value?.let {
+            _priority.value = it.priority
+            _date.value = it.deadLine?.time
+        }
+
     }
 
     fun deleteItemById() = viewModelScope.launch {
         item.value?.let {
-            repo.deleteItemById(it.id)
+            repo.deleteItem(it)
         }
     }.invokeOnCompletion { startNavigationEvent() }
 
@@ -48,7 +53,7 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
                 text = text,
                 completed = false,
                 priority = priority.value ?: ToDoItem.Priority.NORMAL,
-                deadLine = Date(date.value ?: calendar.timeInMillis),
+                deadLine = date.value?.let { Date(it) },
                 creationDate = Date(calendar.timeInMillis),
                 editionDate = Date(calendar.timeInMillis)
             )
@@ -56,7 +61,17 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
     }
 
     fun updateById(text: String) {
-        //TODO
+        val calendar = Calendar.getInstance()
+        val changedItem = ToDoItem(
+            id = item.value!!.id,
+            text = text,
+            completed = item.value!!.completed,
+            priority = priority.value!!,
+            deadLine = date.value?.let { Date(it) },
+            creationDate = item.value!!.creationDate,
+            editionDate = Date(calendar.timeInMillis)
+        )
+        viewModelScope.launch { repo.changeItem(changedItem) }.invokeOnCompletion { startNavigationEvent() }
     }
 
     fun updatePriority(priority: ToDoItem.Priority) {

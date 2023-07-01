@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
@@ -36,17 +37,10 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         ToDoItemListAdapter(this::adapterCheckHandler, this::adapterInfoHandler)
     }
 
-    //TODO: сделать by lazy
-    private lateinit var viewModel: MainViewModel
-
+    private val viewModel by viewModel<MainViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(
-            this,
-            MainViewModel.Factory(ToDoApp.getLiveInstance())
-        )[MainViewModel::class.java]
 
         /**                              RecyclerView                              */
 
@@ -133,16 +127,16 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
     }
 
     override fun deleteTask(position: Int) {
-        viewModel.deleteItemById(toDoItemListAdapter.currentList[position].id)
+        viewModel.deleteItem(toDoItemListAdapter.currentList[position])
     }
 
     override fun subscribeOnTask(position: Int) {
-        viewModel.checkItemById(toDoItemListAdapter.currentList[position].id)
+        viewModel.checkItem(toDoItemListAdapter.currentList[position])
         toDoItemListAdapter.notifyItemChanged(position)
     }
 
     private fun adapterCheckHandler(todoItem: ToDoItem) {
-        viewModel.checkItemById(todoItem.id)
+        viewModel.checkItem(todoItem)
     }
 
     private fun adapterInfoHandler(toDoItem: ToDoItem) {

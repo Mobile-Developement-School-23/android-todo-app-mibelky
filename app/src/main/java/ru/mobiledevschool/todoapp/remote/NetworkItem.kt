@@ -1,6 +1,7 @@
 package ru.mobiledevschool.todoapp.remote
 
 import com.google.gson.annotations.SerializedName
+import ru.mobiledevschool.todoapp.dto.ToDoItemDTO
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.toDateFormat
 import java.util.Date
@@ -32,6 +33,16 @@ data class NetworkItem(
         deadLine = this.deadLine?.let {Date(it)},
         creationDate = Date(this.createdAt),
         editionDate = Date(this.changedAt),
+        completed = this.completed
+    )
+
+    fun toToDoItemDTO() = ToDoItemDTO(
+        id = this.id,
+        text = this.text,
+        priority = this.importance.toPriority(),
+        deadLine = this.deadLine,
+        creationDate = this.createdAt,
+        editionDate = this.changedAt,
         completed = this.completed
     )
 

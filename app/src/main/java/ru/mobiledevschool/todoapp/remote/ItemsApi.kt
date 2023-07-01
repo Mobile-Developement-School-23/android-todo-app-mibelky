@@ -33,8 +33,9 @@ interface ItemsApi {
 
     @PUT("list/{id}")
     suspend fun updateItem(
+        @Header("X-Last-Known-Revision") revision: Int,
         @Path("id") id: String,
-        item: NetworkItemRequestContainer
+        @Body item: NetworkItemRequestContainer
     ): NetworkItemResponseContainer
 
     @DELETE("list/{id}")
