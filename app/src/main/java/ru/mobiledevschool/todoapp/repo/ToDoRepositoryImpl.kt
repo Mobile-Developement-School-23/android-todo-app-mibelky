@@ -7,6 +7,8 @@ import androidx.lifecycle.switchMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
@@ -25,34 +27,13 @@ class ToDoRepositoryImpl(
 
     private var revision = 0
 
-    private val arrayList = ArrayList<ToDoItem>()
-
-//    val doneSize: LiveData<Int>
-//        get() = _remoteList.map { it.count { item -> item.completed } }
-
-    private val _showDone = MutableLiveData(true)
-    val showDone: LiveData<Boolean>
-        get() = _showDone
-
-//    private val _toDoList = MutableLiveData<List<ToDoItem>>()
-
-//    val toDoList = _showDone.switchMap { _showDone ->
-//        when (_showDone) {
-//            true -> toDoItemsDao.getItems().map { it.asDomainModel() }
-//            else -> toDoItemsDao.getUndoneItems().map { it.asDomainModel() }
-//        }
-//    }
-//
-//    private val _remoteList = MutableLiveData<List<ToDoItem>>(emptyList<ToDoItem>())
-//    val remoteList: LiveData<List<ToDoItem>> = _remoteList
-
-    suspend fun getAllItems(): Flow<List<ToDoItem>> {
-        return toDoItemsDao.getItems().map { it.asDomainModel() }
-    }
-
     private val _httpExceptionCodeEvent = MutableLiveData<Int?>(null)
     val httpExceptionCodeEvent: LiveData<Int?>
         get() = _httpExceptionCodeEvent
+
+    fun getAllItems(): Flow<List<ToDoItem>> {
+        return toDoItemsDao.getItems().map { it.asDomainModel() }
+    }
 
     private fun startHttpExceptionCodeEvent(code: Int) {
         _httpExceptionCodeEvent.value = code
@@ -73,20 +54,11 @@ class ToDoRepositoryImpl(
                 networkItemRequestContainer
             )
         }) {
-            is Result.Success -> {
-                updateRevision(response.data.revision)
-
-            }
-
-            is Result.Error -> {
-                when (response.exception) {
+            is Result.Success ->  updateRevision(response.data.revision)
+            is Result.Error -> when (response.exception) {
                     is HttpException -> startHttpExceptionCodeEvent(response.exception.code())
                 }
-            }
-
-            is Result.Other -> {
-                refreshItems()
-            }
+            is Result.Other -> {}
         }
     }
 
@@ -94,6 +66,7 @@ class ToDoRepositoryImpl(
         withContext(dispatcher) {
             val response = itemsApi.getItems()
             updateRevision(response.revision)
+            toDoItemsDao.deleteAllItems()
             toDoItemsDao.insertAll(*response.toDTOArray())
         }
 
@@ -172,7 +145,7 @@ class ToDoRepositoryImpl(
     }
 
     fun changeVisibility() {
-        _showDone.value = !_showDone.value!!
+//        _showDone.value = !_showDone.value!!
     }
 
     private fun updateRevision(value: Int) {
