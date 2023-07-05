@@ -2,24 +2,18 @@ package ru.mobiledevschool.todoapp.repo
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.map
-import androidx.lifecycle.switchMap
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import ru.mobiledevschool.todoapp.dto.asDomainModel
 import ru.mobiledevschool.todoapp.local.ToDoItemsDao
 import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.remote.NetworkItemRequestContainer
-import ru.mobiledevschool.todoapp.remote.Result
 
 class ToDoRepositoryImpl(
-    private val toDoItemsDao: ToDoItemsDao,
+    private val itemsDao: ToDoItemsDao,
     private val itemsApi: ItemsApi,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 
@@ -27,120 +21,69 @@ class ToDoRepositoryImpl(
 
     private var revision = 0
 
-    private val _httpExceptionCodeEvent = MutableLiveData<Int?>(null)
-    val httpExceptionCodeEvent: LiveData<Int?>
-        get() = _httpExceptionCodeEvent
+    private val _exceptionMessageEvent = MutableLiveData<String?>(null)
+    val exceptionMessageEvent: LiveData<String?>
+        get() = _exceptionMessageEvent
 
     fun getAllItems(): Flow<List<ToDoItem>> {
-        return toDoItemsDao.getItems().map { it.asDomainModel() }
+        return itemsDao.getItems().map { it.asDomainModel() }
     }
 
-    private fun startHttpExceptionCodeEvent(code: Int) {
-        _httpExceptionCodeEvent.value = code
+    fun getDoneQuantity(): Flow<Int> = itemsDao.getDoneQuantity()
+
+    private fun startExceptionMessageEvent(message: String) {
+        _exceptionMessageEvent.value = message
     }
 
-    fun endHttpExceptionCodeEvent() {
-        _httpExceptionCodeEvent.value = null
+    fun endExceptionMessageEvent() {
+        _exceptionMessageEvent.value = null
     }
 
 
     override suspend fun addItem(toDoItem: ToDoItem) {
-        val networkItem = toDoItem.toNetworkItem()
-        val networkItemRequestContainer = NetworkItemRequestContainer(networkItem)
-        toDoItemsDao.saveItem(toDoItem.toDTO())
-        when (val response = safeApiCall(dispatcher) {
-            itemsApi.addItem(
-                revision,
-                networkItemRequestContainer
-            )
-        }) {
-            is Result.Success ->  updateRevision(response.data.revision)
-            is Result.Error -> when (response.exception) {
-                    is HttpException -> startHttpExceptionCodeEvent(response.exception.code())
-                }
-            is Result.Other -> {}
+        val container = NetworkItemRequestContainer(toDoItem.toNetworkItem())
+        safeCall { itemsApi.addItem(revision, container) }.unpack()?.let {
+            safeCall { itemsDao.saveItem(toDoItem.toDTO()) }
+            updateRevision(it.revision)
         }
     }
 
-    override suspend fun refreshItems() =
-        withContext(dispatcher) {
-            val response = itemsApi.getItems()
-            updateRevision(response.revision)
-            toDoItemsDao.deleteAllItems()
-            toDoItemsDao.insertAll(*response.toDTOArray())
+    override suspend fun refreshItems() {
+        safeCall { itemsApi.getItems() }.unpack()?.let {
+            updateRevision(it.revision)
+            safeCall { itemsDao.deleteAllItems() }.unpack()
+            safeCall { itemsDao.insertAll(*it.toDTOArray()) }.unpack()
         }
+    }
 
     override suspend fun deleteItem(toDoItem: ToDoItem) {
-        toDoItemsDao.deleteItemById(toDoItem.id)
-        val response = safeApiCall(dispatcher) { itemsApi.deleteItem(revision, toDoItem.id) }
-        when (response) {
-            is Result.Success -> {
-                updateRevision(response.data.revision)
-            }
-
-            is Result.Error -> {
-                when (response.exception) {
-                    is HttpException -> startHttpExceptionCodeEvent(response.exception.code())
-                }
-            }
-
-            is Result.Other -> {}
+        val result = safeCall { itemsApi.deleteItem(revision, toDoItem.id) }
+        result.unpack()?.let {
+            updateRevision(it.revision)
+            safeCall { itemsDao.deleteItemById(toDoItem.id) }.unpack()
         }
     }
 
-    override suspend fun getItemById(id: String): ToDoItem? = withContext(dispatcher) {
-        toDoItemsDao.getItemById(id)?.toDomainItem()
+    override suspend fun getItemById(id: String): ToDoItem? {
+        return safeCall { itemsDao.getItemById(id) }.unpack()?.toDomainItem()
     }
 
-
     suspend fun getNetworkItemById(id: String): ToDoItem? {
-        val response = safeApiCall(dispatcher) { itemsApi.getItem(id) }
-        when (response) {
-            is Result.Success -> {
-                updateRevision(response.data.revision)
-                return response.data.element.toDomainItem()
-            }
-
-            is Result.Error -> when (response.exception) {
-                is HttpException -> {
-                    startHttpExceptionCodeEvent(response.exception.code()); return null
-                }
-
-                else -> return null
-            }
-
-            is Result.Other -> {
-                return null
-            }
+        val result = safeCall { itemsApi.getItem(id) }
+        return result.unpack()?.let {
+            updateRevision(it.revision)
+            it.element.toDomainItem()
         }
     }
 
     override suspend fun changeItem(toDoItem: ToDoItem) {
-        val networkItem = toDoItem.toNetworkItem()
-        val networkItemRequestContainer = NetworkItemRequestContainer(networkItem)
-        toDoItemsDao.saveItem(toDoItem.toDTO())
-
-        val response = safeApiCall(dispatcher) {
-            itemsApi.updateItem(
-                revision,
-                toDoItem.id,
-                networkItemRequestContainer
-            )
+        val container = NetworkItemRequestContainer(toDoItem.toNetworkItem())
+        val result = safeCall {
+            itemsApi.updateItem(revision, toDoItem.id, container)
         }
-        when (response) {
-            is Result.Success -> {
-                updateRevision(response.data.revision)
-            }
-
-            is Result.Error -> {
-                when (response.exception) {
-                    is HttpException -> startHttpExceptionCodeEvent(response.exception.code())
-                }
-
-            }
-
-            is Result.Other -> {
-            }
+        result.unpack()?.let {
+            withContext(dispatcher) { itemsDao.saveItem(toDoItem.toDTO()) }
+            updateRevision(it.revision)
         }
     }
 
@@ -152,16 +95,14 @@ class ToDoRepositoryImpl(
         revision = value
     }
 
-    private suspend fun <T> safeApiCall(
-        dispatcher: CoroutineDispatcher,
-        apiCall: suspend () -> T
-    ): Result<T> {
-        return withContext(dispatcher) {
-            try {
-                Result.Success(apiCall.invoke())
-            } catch (exception: Exception) {
-                Result.Error(exception)
-            }
-        }
+    private suspend fun <T> safeCall(
+        call: suspend () -> T
+    ): Result<T> = withContext(dispatcher) {
+        runCatching { call.invoke() }
     }
+
+    private fun <T> Result<T>.unpack(): T? = exceptionOrNull()?.let { exception ->
+        startExceptionMessageEvent(messageFrom(exception))
+        null
+    } ?: getOrNull()
 }

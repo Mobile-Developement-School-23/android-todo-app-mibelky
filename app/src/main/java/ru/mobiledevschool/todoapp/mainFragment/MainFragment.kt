@@ -53,8 +53,7 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         /**                              FAB behavior                              */
 
         binding.addNewItemFab.setOnClickListener {
-            val bundle = bundleOf("id" to null)
-            findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
+            findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundleOf("id" to null))
         }
 
         /**                              Show done button behavior                              */
@@ -81,32 +80,26 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         /**                              Snackbar HTTP code                                  */
         viewModel.httpExceptionCodeEvent.observe(viewLifecycleOwner) {
             it?.let {
-                Snackbar.make(binding.root, it.toString(), Snackbar.LENGTH_SHORT)
+                Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT)
                     .show()
                 viewModel.endHttpExceptionCodeEvent()
             }
         }
 
 
-        val toolBarHeight = binding.motionLayout.minimumHeight
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.motionLayout) { _, insets ->
-            // Resizing motion layout in a collapsed state with needed insets to not overlap system bars
+            val toolBarHeight = binding.motionLayout.minimumHeight
             val insetHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            //val insetHeight = insets.systemWindowInsetTop
             binding.motionLayout.minimumHeight = toolBarHeight + insetHeight
-
-            // Update guidelines with givens insets
             val endConstraintSet = binding.motionLayout.getConstraintSet(R.id.collapsed)
             endConstraintSet.setGuidelineEnd(R.id.insets_guideline, toolBarHeight)
             endConstraintSet.setGuidelineEnd(
                 R.id.collapsed_top_guideline,
                 toolBarHeight + insetHeight
             )
-
             val startConstraintSet = binding.motionLayout.getConstraintSet(R.id.expanded)
             startConstraintSet.setGuidelineBegin(R.id.collapsed_top_guideline, insetHeight)
-
             insets
         }
 
@@ -164,7 +157,6 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
 
         binding.toDoRecyclerView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
-                // Вызываем метод clearSwipeState() после отпускания свайпа
                 toDoListTouchHelper.clearState()
             }
             false

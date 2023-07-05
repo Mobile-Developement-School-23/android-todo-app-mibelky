@@ -1,5 +1,6 @@
 package ru.mobiledevschool.todoapp.mainFragment
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,23 +14,29 @@ class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     val listToShow = MutableLiveData<List<ToDoItem>>()
 
-    val httpExceptionCodeEvent = repo.httpExceptionCodeEvent
-    fun endHttpExceptionCodeEvent() = repo.endHttpExceptionCodeEvent()
+    val httpExceptionCodeEvent = repo.exceptionMessageEvent
+    fun endHttpExceptionCodeEvent() = repo.endExceptionMessageEvent()
 
-    val doneQuantity = MutableLiveData<Int>()
-
+    private val _doneQuantity = MutableLiveData<Int>()
+    val doneQuantity: LiveData<Int>
+        get() = _doneQuantity
     init {
         viewModelScope.launch {
             repo.getAllItems().collect { items ->
                 listToShow.postValue(items)
-                doneQuantity.postValue(items.count { it.completed })
             }
         }
+        collectDoneQuantity()
         refreshItems()
     }
     private fun refreshItems() = viewModelScope.launch {
         repo.refreshItems()
     }
+
+    private fun collectDoneQuantity() = viewModelScope.launch {
+        repo.getDoneQuantity().collect{ _doneQuantity.postValue(it) }
+    }
+
     fun deleteItem(toDoItem: ToDoItem) = viewModelScope.launch {
         repo.deleteItem(toDoItem)
     }
