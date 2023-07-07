@@ -1,11 +1,13 @@
 package ru.mobiledevschool.todoapp.repo
 
-import ru.mobiledevschool.todoapp.dto.ToDoItemDTO
-import ru.mobiledevschool.todoapp.remote.NetworkItem
+import ru.mobiledevschool.todoapp.local.entity.ToDoItemEntity
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItem
 import java.util.Date
 import java.util.UUID
 
-
+/*
+* Data class для UI и domain представления. Используется ViewModel, UI и Repository.
+ */
 data class ToDoItem(
     val id: String = UUID.randomUUID().toString(),
     var text: String,
@@ -35,7 +37,7 @@ data class ToDoItem(
         changedAt = this.editionDate?.time ?: 0
     )
 
-    fun toDTO() = ToDoItemDTO(
+    fun toDTO() = ToDoItemEntity(
         id = this.id,
         text = this.text,
         priority = this.priority,

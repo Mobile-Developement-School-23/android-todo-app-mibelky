@@ -2,15 +2,15 @@ package ru.mobiledevschool.todoapp.mainFragment.recycler
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.core.os.bundleOf
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.mobiledevschool.todoapp.R
-import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.databinding.ToDoItemBinding
+import ru.mobiledevschool.todoapp.repo.ToDoItem
 
+/*
+* Кастомный класс-наследник ListAdapter отвечающий за поведение списка дел в RecyclerView
+ */
 class ToDoItemListAdapter(
     private val checkBoxHandler: (ToDoItem) -> Unit,
     private val infoHandler: (ToDoItem) -> Unit,

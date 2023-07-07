@@ -1,7 +1,10 @@
-package ru.mobiledevschool.todoapp.remote
+package ru.mobiledevschool.todoapp.remote.dtobjects
 
 import com.google.gson.annotations.SerializedName
 
+/*
+* Класс для парсинга данных из ответа сервера в список дел
+ */
 data class NetworkItemListResponseContainer(
     @SerializedName("status")
     val status: String,

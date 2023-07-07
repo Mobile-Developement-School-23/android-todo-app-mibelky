@@ -1,7 +1,10 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.connectivity
 
 import kotlinx.coroutines.flow.Flow
 
+/*
+* Интерфейс для отслеживания состояния сети
+ */
 interface ConnectivityObserver {
 
     fun observe(): Flow<Status>

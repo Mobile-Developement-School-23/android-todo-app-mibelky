@@ -10,7 +10,10 @@ import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 import java.util.Calendar
 import java.util.Date
-
+/*
+* ViewModel для NewItemFragment. Содержит состояния для View данного фрагмента, ссылается
+*  на Repository, откуда берет и куда отправляет данные
+* */
 class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     private val _item = MutableLiveData<ToDoItem?>(null)

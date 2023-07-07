@@ -3,17 +3,17 @@ package ru.mobiledevschool.todoapp.mainFragment.recycler
 import android.graphics.Paint
 import android.util.TypedValue
 import android.view.View
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.res.ResourcesCompat.getColor
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.toSimpleString
-import java.time.LocalDate
 import java.util.Date
 
+/*
+* Файл содержит extension-функции для View, используемых внутри ViewHolder.
+* */
 fun ImageView.bindCompletionImage(completed: Boolean, priority: ToDoItem.Priority) {
     if (completed) {
         setImageResource(R.drawable.checked)
@@ -33,7 +33,7 @@ fun ImageView.bindPriorityImage(completed: Boolean, priority: ToDoItem.Priority)
         }
 
         ToDoItem.Priority.HIGH -> {
-            visibility = ImageView.VISIBLE;
+            visibility = ImageView.VISIBLE
             if (!completed) {
                 setImageResource(R.drawable.icon_priority_high)
             } else {

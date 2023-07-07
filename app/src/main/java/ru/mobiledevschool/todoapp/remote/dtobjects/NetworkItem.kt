@@ -1,11 +1,11 @@
-package ru.mobiledevschool.todoapp.remote
+package ru.mobiledevschool.todoapp.remote.dtobjects
 
 import com.google.gson.annotations.SerializedName
-import ru.mobiledevschool.todoapp.dto.ToDoItemDTO
+import ru.mobiledevschool.todoapp.local.entity.ToDoItemEntity
 import ru.mobiledevschool.todoapp.repo.ToDoItem
-import ru.mobiledevschool.todoapp.utility.toDateFormat
-import java.util.Date
-
+/*
+* Класс представления наших дел для парсинга в JSON и обратно
+ */
 data class NetworkItem(
     @SerializedName("id")
     val id: String,
@@ -26,17 +26,7 @@ data class NetworkItem(
     @SerializedName("last_updated_by")
     val lastUpdatedBy: String? = "null"
 ) {
-    fun toDomainItem() = ToDoItem(
-        id = this.id,
-        text = this.text,
-        priority = this.importance.toPriority(),
-        deadLine = this.deadLine?.let {Date(it)},
-        creationDate = Date(this.createdAt),
-        editionDate = Date(this.changedAt),
-        completed = this.completed
-    )
-
-    fun toToDoItemDTO() = ToDoItemDTO(
+    fun toToDoItemDTO() = ToDoItemEntity(
         id = this.id,
         text = this.text,
         priority = this.importance.toPriority(),

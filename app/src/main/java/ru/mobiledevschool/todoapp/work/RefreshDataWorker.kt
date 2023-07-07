@@ -6,7 +6,9 @@ import androidx.work.WorkerParameters
 import retrofit2.HttpException
 import ru.mobiledevschool.todoapp.local.ToDoItemsDao
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
-
+/*
+* Класс содержит метод doWork() с для периодического обновления данных с сервером.
+ */
 class RefreshDataWorker(appContext: Context, params: WorkerParameters, private val repository: ToDoRepositoryImpl):
     CoroutineWorker(appContext, params) {
 

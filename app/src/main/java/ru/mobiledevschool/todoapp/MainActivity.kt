@@ -1,8 +1,12 @@
 package ru.mobiledevschool.todoapp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Отвечает за отображение activity_main.xml, который в свою очередь содержит FragmentContainerView,
+ * отвечающий за навигацию между MainFragment и NewItemFragment
+ */
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

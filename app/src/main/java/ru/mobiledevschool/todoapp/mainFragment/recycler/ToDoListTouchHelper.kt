@@ -9,27 +9,29 @@ import androidx.core.view.marginRight
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import ru.mobiledevschool.todoapp.R
-import ru.mobiledevschool.todoapp.utility.dp
 import kotlin.math.roundToInt
 import kotlin.properties.Delegates
 
+/*
+* Этот класс содержит логику для обработки свайпов в нашем RecyclerView
+ */
 class ToDoListTouchHelper(
     private val context: Context,
     private val setupTaskBySwipeImpl: SetupTaskBySwipe
 ) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
-    val displayMetrics = context.resources.displayMetrics
-    val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp(context.resources)
+    private val displayMetrics = context.resources.displayMetrics
+    val width = (displayMetrics.widthPixels / displayMetrics.density).toInt().dp
 
-    val deleteColor =
+    private val deleteColor =
         context.resources.getColor(R.color.color_light_red, context.theme).toDrawable()
-    val checkColor =
+    private val checkColor =
         context.resources.getColor(R.color.color_light_green, context.theme).toDrawable()
 
-    val deleteIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.delete, null)?: throwErrorIcon()
-    val checkIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.check, null)?: throwErrorIcon()
+    private val deleteIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.delete, null)?: throwErrorIcon()
+    private val checkIcon = ResourcesCompat.getDrawable(context.resources, R.drawable.check, null)?: throwErrorIcon()
 
-    var isSwipeInProgress: Boolean by Delegates.notNull()
+    private var isSwipeInProgress: Boolean by Delegates.notNull()
 
     override fun onMove(
         recyclerView: RecyclerView,

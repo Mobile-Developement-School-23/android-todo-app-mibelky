@@ -1,6 +1,5 @@
 package ru.mobiledevschool.todoapp.remote
 
-import androidx.lifecycle.MutableLiveData
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
@@ -9,8 +8,15 @@ import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
-import ru.mobiledevschool.todoapp.remote.Result
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemListRequestContainer
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemListResponseContainer
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemRequestContainer
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemResponseContainer
 
+/*
+* Интерфейс для нашего API, содержит описание функций для последующего формирования запросов с
+* помощью Retrofit
+ */
 interface ItemsApi {
 
     @GET("list/")

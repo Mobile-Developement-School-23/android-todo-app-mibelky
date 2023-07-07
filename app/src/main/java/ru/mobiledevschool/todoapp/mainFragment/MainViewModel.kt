@@ -8,22 +8,27 @@ import kotlinx.coroutines.launch
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 
+/*
+* ViewModel для MainFragment. Содержит состояния для View данного фрагмента, ссылается
+*  на Repository, откуда берет и куда отправляет данные
+ */
 class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     val showDone = MutableLiveData<Boolean>(true)
 
     private val _listToShow = MutableLiveData<List<ToDoItem>>()
-    val listToShow : LiveData<List<ToDoItem>>
+    val listToShow: LiveData<List<ToDoItem>>
         get() = _listToShow
 
     val exceptionMessageEvent = repo.exceptionMessageEvent
     fun endHttpExceptionCodeEvent() = repo.endExceptionMessageEvent()
 
     private val _navigateEvent = MutableLiveData<String?>("null")
-    val navigateEvent :LiveData<String?> = _navigateEvent
+    val navigateEvent: LiveData<String?> = _navigateEvent
 
     private val _doneQuantity = MutableLiveData<Int>()
-    val doneQuantity: LiveData<Int>  = _doneQuantity
+    val doneQuantity: LiveData<Int> = _doneQuantity
+
     init {
         viewModelScope.launch {
             repo.getAllItems().collect { items ->
@@ -33,17 +38,19 @@ class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
         collectDoneQuantity()
         refreshItems()
     }
+
     private fun refreshItems() = viewModelScope.launch {
         repo.refreshItems()
     }
 
     private fun collectDoneQuantity() = viewModelScope.launch {
-        repo.getDoneQuantity().collect{ _doneQuantity.postValue(it) }
+        repo.getDoneQuantity().collect { _doneQuantity.postValue(it) }
     }
 
     fun deleteItem(toDoItem: ToDoItem) = viewModelScope.launch {
         repo.deleteItem(toDoItem)
     }
+
     fun checkItem(toDoItem: ToDoItem) = viewModelScope.launch {
         val checkedItem = ToDoItem(
             id = toDoItem.id,
@@ -54,10 +61,10 @@ class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
             creationDate = toDoItem.creationDate,
             editionDate = toDoItem.editionDate
         )
-            repo.changeItem(checkedItem)
+        repo.changeItem(checkedItem)
     }
 
-    fun changeVisibility() =  repo.changeVisibility()
+    fun changeVisibility() = repo.changeVisibility()
     fun startNavigateEvent(id: String?) {
         _navigateEvent.value = id
     }

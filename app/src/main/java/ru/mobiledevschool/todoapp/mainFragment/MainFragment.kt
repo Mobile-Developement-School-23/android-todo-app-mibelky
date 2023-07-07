@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,6 +23,10 @@ import ru.mobiledevschool.todoapp.mainFragment.recycler.ToDoListTouchHelper
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindShowDoneImage
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 
+/**
+ * Главный фрагмент, содержит список дел. Отвечает за представление View, нажатия, клики, свайпы.
+ * Связан с ViewModel, откуда берет и куда передает данные.
+ */
 class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
 
     private var _binding: FragmentMainBinding? = null
@@ -47,6 +52,7 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         }
 
         initUi()
+        setMotionLayoutBehavior(binding.motionLayout)
 
         /**                              FAB behavior                              */
 
@@ -88,24 +94,6 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
                 viewModel.endHttpExceptionCodeEvent()
             }
         }
-
-
-
-        ViewCompat.setOnApplyWindowInsetsListener(binding.motionLayout) { _, insets ->
-            val toolBarHeight = binding.motionLayout.minimumHeight
-            val insetHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
-            binding.motionLayout.minimumHeight = toolBarHeight + insetHeight
-            val endConstraintSet = binding.motionLayout.getConstraintSet(R.id.collapsed)
-            endConstraintSet.setGuidelineEnd(R.id.insets_guideline, toolBarHeight)
-            endConstraintSet.setGuidelineEnd(
-                R.id.collapsed_top_guideline,
-                toolBarHeight + insetHeight
-            )
-            val startConstraintSet = binding.motionLayout.getConstraintSet(R.id.expanded)
-            startConstraintSet.setGuidelineBegin(R.id.collapsed_top_guideline, insetHeight)
-            insets
-        }
-
     }
 
     override fun onCreateView(
@@ -147,6 +135,23 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         )
     }
 
+    private fun setMotionLayoutBehavior(motionLayout: MotionLayout) {
+        ViewCompat.setOnApplyWindowInsetsListener(motionLayout) { _, insets ->
+            val toolBarHeight = motionLayout.minimumHeight
+            val insetHeight = insets.getInsets(WindowInsetsCompat.Type.systemBars()).top
+            motionLayout.minimumHeight = toolBarHeight + insetHeight
+            val endConstraintSet = motionLayout.getConstraintSet(R.id.collapsed)
+            endConstraintSet.setGuidelineEnd(R.id.insets_guideline, toolBarHeight)
+            endConstraintSet.setGuidelineEnd(
+                R.id.collapsed_top_guideline,
+                toolBarHeight + insetHeight
+            )
+            val startConstraintSet = motionLayout.getConstraintSet(R.id.expanded)
+            startConstraintSet.setGuidelineBegin(R.id.collapsed_top_guideline, insetHeight)
+            insets
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private fun initUi() {
         binding.toDoRecyclerView.run {
@@ -171,6 +176,5 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
             }
             false
         }
-
     }
 }

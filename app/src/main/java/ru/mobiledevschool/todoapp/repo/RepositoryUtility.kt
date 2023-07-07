@@ -3,7 +3,9 @@ package ru.mobiledevschool.todoapp.repo
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
-
+/*
+* Файл с extension-функциями для преобразования exception в строчное пресдставление для SnackBar
+ */
     fun messageFrom(exception: Throwable): String = when (exception) {
         is SocketTimeoutException -> ExceptionMessage.SOCKET_TIMEOUT.message
         is IOException -> ExceptionMessage.IO.message

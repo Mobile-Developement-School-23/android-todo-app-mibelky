@@ -9,14 +9,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.mobiledevschool.todoapp.R
-import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.databinding.FragmentNewItemBinding
-import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDeadLineDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindPriorityText
@@ -24,6 +21,11 @@ import ru.mobiledevschool.todoapp.mainFragment.recycler.enable
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.utility.toDateFormat
 
+/*
+ * Фрагмент для создания нового или редактирования уже имеющегося дела.
+ * Отвечает за представление View, нажатия, клики, свайпы.
+ * Связан с ViewModel, откуда берет и куда передает данные.
+ */
 class NewItemFragment : Fragment() {
 
     private lateinit var binding: FragmentNewItemBinding
@@ -77,8 +79,7 @@ class NewItemFragment : Fragment() {
         }
 
         viewModel.navigationEvent.observe(viewLifecycleOwner) {
-            navigate ->
-            if (navigate) {
+            navigate -> if (navigate) {
                 viewModel.endNavigationEvent()
                 findNavController().navigateUp()
             }
@@ -133,7 +134,7 @@ class NewItemFragment : Fragment() {
                     }
                 }
 
-                else -> {}  //TODO: Add switch logic
+                else -> {}
             }
         }
 

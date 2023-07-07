@@ -1,15 +1,19 @@
-package ru.mobiledevschool.todoapp
+package ru.mobiledevschool.todoapp.connectivity
 
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.Network
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import ru.mobiledevschool.todoapp.connectivity.ConnectivityObserver
 
+/*
+* Класс, имплементация интерфейса [ConnectivityObserver]. В зависимости от состояния сети, формирует
+* соответствующий callback в Flow
+ */
 class NetworkConnectivityObserver(
     context: Context
 ): ConnectivityObserver {

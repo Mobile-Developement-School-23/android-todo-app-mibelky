@@ -18,6 +18,7 @@ import org.koin.core.context.GlobalContext.startKoin
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.mobiledevschool.todoapp.connectivity.NetworkConnectivityObserver
 import ru.mobiledevschool.todoapp.local.LocalDB
 import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.newItemFragment.NewItemViewModel
@@ -26,7 +27,10 @@ import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 import ru.mobiledevschool.todoapp.work.RefreshDataWorker
 import java.util.concurrent.TimeUnit
-
+/**
+ * Application class нашего приложения, здесь располагается DI структур нашего приложения с наиболее
+ * длительным жизненным циклом
+ */
 class ToDoApp : Application() {
 
     override fun onCreate() {

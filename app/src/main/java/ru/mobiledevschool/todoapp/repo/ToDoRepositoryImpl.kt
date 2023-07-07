@@ -10,12 +10,15 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import ru.mobiledevschool.todoapp.NetworkConnectivityObserver
-import ru.mobiledevschool.todoapp.dto.asDomainModel
+import ru.mobiledevschool.todoapp.connectivity.NetworkConnectivityObserver
+import ru.mobiledevschool.todoapp.local.entity.asDomainModel
 import ru.mobiledevschool.todoapp.local.ToDoItemsDao
 import ru.mobiledevschool.todoapp.remote.ItemsApi
-import ru.mobiledevschool.todoapp.remote.NetworkItemRequestContainer
-
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemRequestContainer
+/*
+* Единственный репозиторий нашего приложения, управляет данными из БД и удаленного сервиса, готовит
+* их для ViewModel
+ */
 class ToDoRepositoryImpl(
     private val itemsDao: ToDoItemsDao,
     private val itemsApi: ItemsApi,
@@ -29,8 +32,6 @@ class ToDoRepositoryImpl(
     private val _exceptionMessageEvent = MutableLiveData<String?>(null)
     val exceptionMessageEvent: LiveData<String?>
         get() = _exceptionMessageEvent
-
-    private var networkIsAvailable = false
 
     private var showDone = true
 
