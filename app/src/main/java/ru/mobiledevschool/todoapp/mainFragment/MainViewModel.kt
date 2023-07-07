@@ -10,20 +10,24 @@ import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 
 class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
-    val showDone = MutableLiveData<Boolean>()//repo.showDone
+    val showDone = MutableLiveData<Boolean>(true)
 
-    val listToShow = MutableLiveData<List<ToDoItem>>()
+    private val _listToShow = MutableLiveData<List<ToDoItem>>()
+    val listToShow : LiveData<List<ToDoItem>>
+        get() = _listToShow
 
-    val httpExceptionCodeEvent = repo.exceptionMessageEvent
+    val exceptionMessageEvent = repo.exceptionMessageEvent
     fun endHttpExceptionCodeEvent() = repo.endExceptionMessageEvent()
 
+    private val _navigateEvent = MutableLiveData<String?>("null")
+    val navigateEvent :LiveData<String?> = _navigateEvent
+
     private val _doneQuantity = MutableLiveData<Int>()
-    val doneQuantity: LiveData<Int>
-        get() = _doneQuantity
+    val doneQuantity: LiveData<Int>  = _doneQuantity
     init {
         viewModelScope.launch {
             repo.getAllItems().collect { items ->
-                listToShow.postValue(items)
+                _listToShow.postValue(items)
             }
         }
         collectDoneQuantity()
@@ -53,7 +57,12 @@ class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
             repo.changeItem(checkedItem)
     }
 
-    fun changeVisibility() {
-        repo.changeVisibility()
+    fun changeVisibility() =  repo.changeVisibility()
+    fun startNavigateEvent(id: String?) {
+        _navigateEvent.value = id
+    }
+
+    fun endNavigateEvent() {
+        _navigateEvent.value = "null"
     }
 }

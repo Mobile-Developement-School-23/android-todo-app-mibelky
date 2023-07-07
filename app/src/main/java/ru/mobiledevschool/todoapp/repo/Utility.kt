@@ -20,7 +20,7 @@ import java.net.SocketTimeoutException
         else -> ExceptionMessage.UNKNOWN.message
     }
 
-    enum class ExceptionMessage(val message: String) {
+    enum class ExceptionMessage(val message :String) {
         SOCKET_TIMEOUT("Время ожидания соединения истекло."),
         IO("Ошибка ввода-вывода."),
         HTTP_400("Ошибка синхронизации."),

@@ -10,14 +10,12 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.mobiledevschool.todoapp.R
-import ru.mobiledevschool.todoapp.ToDoApp
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
 import ru.mobiledevschool.todoapp.mainFragment.recycler.ToDoItemListAdapter
 import ru.mobiledevschool.todoapp.mainFragment.recycler.ToDoListTouchHelper
@@ -53,8 +51,13 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         /**                              FAB behavior                              */
 
         binding.addNewItemFab.setOnClickListener {
-            findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundleOf("id" to null))
+            viewModel.startNavigateEvent(null)
         }
+
+        viewModel.navigateEvent.observe(viewLifecycleOwner) {
+            if (it != "null") navigateTo(it)
+        }
+
 
         /**                              Show done button behavior                              */
 
@@ -77,8 +80,8 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
             binding.doneText.text = getString(R.string.done_text_mock, it)
         }
 
-        /**                              Snackbar HTTP code                                  */
-        viewModel.httpExceptionCodeEvent.observe(viewLifecycleOwner) {
+        /**                              Snackbar error message                                  */
+        viewModel.exceptionMessageEvent.observe(viewLifecycleOwner) {
             it?.let {
                 Snackbar.make(binding.root, it, Snackbar.LENGTH_SHORT)
                     .show()
@@ -133,8 +136,15 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
     }
 
     private fun adapterInfoHandler(toDoItem: ToDoItem) {
-        val bundle = bundleOf("id" to toDoItem.id)
-        findNavController().navigate(R.id.action_mainFragment_to_newItemFragment, bundle)
+        viewModel.startNavigateEvent(toDoItem.id)
+    }
+
+    private fun navigateTo(id: String?) {
+        viewModel.endNavigateEvent()
+        findNavController().navigate(
+            R.id.action_mainFragment_to_newItemFragment,
+            bundleOf("id" to id)
+        )
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -146,8 +156,8 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
                 LinearLayoutManager.VERTICAL,
                 false
             ).apply {
-                reverseLayout = true
-                stackFromEnd = true
+                reverseLayout = false
+                stackFromEnd = false
             }
         }
 
