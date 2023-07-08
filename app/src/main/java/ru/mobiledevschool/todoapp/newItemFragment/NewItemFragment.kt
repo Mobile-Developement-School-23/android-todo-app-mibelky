@@ -12,8 +12,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.mobiledevschool.todoapp.MainActivity
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.databinding.FragmentNewItemBinding
+import ru.mobiledevschool.todoapp.di.MainFragmentComponent
+import ru.mobiledevschool.todoapp.di.NewItemFragmentComponent
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDeadLineDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindPriorityText
@@ -27,10 +30,11 @@ import ru.mobiledevschool.todoapp.utility.toDateFormat
  * Связан с ViewModel, откуда берет и куда передает данные.
  */
 class NewItemFragment : Fragment() {
+    private lateinit var component: NewItemFragmentComponent
 
     private lateinit var binding: FragmentNewItemBinding
 
-    private val viewModel by viewModel<NewItemViewModel>()
+    val viewModel by viewModel<NewItemViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +47,9 @@ class NewItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        component = (activity as MainActivity).activityComponent.newItemFragmentComponent()
+        component.inject(this)
 
         arguments?.getString("id")?.let {
             viewModel.getItemById(it)
@@ -78,15 +85,15 @@ class NewItemFragment : Fragment() {
             }
         }
 
-        viewModel.navigationEvent.observe(viewLifecycleOwner) {
-            navigate -> if (navigate) {
+        viewModel.navigationEvent.observe(viewLifecycleOwner) { navigate ->
+            if (navigate) {
                 viewModel.endNavigationEvent()
                 findNavController().navigateUp()
             }
         }
 
         viewModel.date.observe(viewLifecycleOwner) {
-            it?.let { binding.deadline.bindDate(it.toDateFormat())}
+            it?.let { binding.deadline.bindDate(it.toDateFormat()) }
         }
 
         /**                                Top app bar handler                               */

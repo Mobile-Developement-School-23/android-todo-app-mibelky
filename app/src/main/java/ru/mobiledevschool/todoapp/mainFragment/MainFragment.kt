@@ -11,13 +11,16 @@ import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import ru.mobiledevschool.todoapp.MainActivity
 import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.databinding.FragmentMainBinding
+import ru.mobiledevschool.todoapp.di.MainFragmentComponent
 import ru.mobiledevschool.todoapp.mainFragment.recycler.ToDoItemListAdapter
 import ru.mobiledevschool.todoapp.mainFragment.recycler.ToDoListTouchHelper
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindShowDoneImage
@@ -28,6 +31,8 @@ import ru.mobiledevschool.todoapp.repo.ToDoItem
  * Связан с ViewModel, откуда берет и куда передает данные.
  */
 class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
+
+    private lateinit var component: MainFragmentComponent
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding ?: throw RuntimeException("Binding mustn't be null")
@@ -40,11 +45,16 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         ToDoItemListAdapter(this::adapterCheckHandler, this::adapterInfoHandler)
     }
 
-    private val viewModel by viewModel<MainViewModel>()
+    private val viewModel: MainViewModel by viewModels {
+        component.viewModelsFactory()
+    }
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        component = (activity as MainActivity).activityComponent.mainFragmentComponent()
+        component.inject(this)
         /**                              RecyclerView                              */
 
         viewModel.listToShow.observe(viewLifecycleOwner) {

@@ -3,16 +3,19 @@ package ru.mobiledevschool.todoapp.mainFragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
+import javax.inject.Inject
+import javax.inject.Provider
 
 /*
 * ViewModel для MainFragment. Содержит состояния для View данного фрагмента, ссылается
 *  на Repository, откуда берет и куда отправляет данные
  */
-class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
+class MainViewModel @Inject constructor(val repo: ToDoRepositoryImpl) : ViewModel() {
 
     val showDone = MutableLiveData<Boolean>(true)
 
@@ -71,5 +74,17 @@ class MainViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
 
     fun endNavigateEvent() {
         _navigateEvent.value = "null"
+    }
+}
+
+class ViewModelFactory @Inject constructor(
+mainViewModelProvider: Provider<MainViewModel>
+) : ViewModelProvider.Factory {
+    private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
+        MainViewModel::class.java to mainViewModelProvider
+    )
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return providers[modelClass]!!.get() as T
     }
 }

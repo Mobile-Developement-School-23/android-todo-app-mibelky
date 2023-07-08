@@ -10,8 +10,6 @@ import androidx.work.WorkManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.GlobalContext.startKoin
@@ -19,7 +17,8 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.mobiledevschool.todoapp.connectivity.NetworkConnectivityObserver
-import ru.mobiledevschool.todoapp.local.LocalDB
+import ru.mobiledevschool.todoapp.di.AppComponent
+import ru.mobiledevschool.todoapp.di.DaggerAppComponent
 import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.newItemFragment.NewItemViewModel
 import ru.mobiledevschool.todoapp.remote.AuthInterceptor
@@ -32,61 +31,12 @@ import java.util.concurrent.TimeUnit
  * длительным жизненным циклом
  */
 class ToDoApp : Application() {
-
+    lateinit var appComponent: AppComponent
+         private set
     override fun onCreate() {
         super.onCreate()
+        appComponent = DaggerAppComponent.factory().create(context = this)
         delayedInit()
-
-        /**
-         * use Koin Library as a service locator
-         */
-        val myModule = module {
-
-            viewModel {
-                MainViewModel(
-                    get() as ToDoRepositoryImpl
-                )
-            }
-
-            viewModel {
-                NewItemViewModel(
-                    get() as ToDoRepositoryImpl
-                )
-            }
-
-            single { ToDoRepositoryImpl(get(), get(), get(), appScope = get()) }
-            single { LocalDB.createToDoItemsDao(this@ToDoApp) }
-            single { AuthInterceptor() }
-            single { CoroutineScope(Dispatchers.Default) }
-
-            single {
-                OkHttpClient.Builder()
-                    .callTimeout(0, TimeUnit.MILLISECONDS)
-                    .connectTimeout(15000, TimeUnit.MILLISECONDS)
-                    .readTimeout(15000, TimeUnit.MILLISECONDS)
-                    .writeTimeout(15000, TimeUnit.MILLISECONDS)
-                    .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
-                    .addInterceptor(AuthInterceptor())
-                    .build()
-            }
-
-            single {
-                Retrofit.Builder()
-                    .baseUrl("https://beta.mrdekk.ru/todobackend/")
-                    .client(get())
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build().create(ItemsApi::class.java)
-            }
-
-            single {
-                NetworkConnectivityObserver(get())
-            }
-        }
-
-        startKoin {
-            androidContext(this@ToDoApp)
-            modules(listOf(myModule))
-        }
     }
 
     private val applicationScope = CoroutineScope(Dispatchers.Default)

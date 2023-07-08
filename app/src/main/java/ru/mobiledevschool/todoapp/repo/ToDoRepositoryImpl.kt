@@ -11,22 +11,27 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.mobiledevschool.todoapp.connectivity.NetworkConnectivityObserver
+import ru.mobiledevschool.todoapp.di.AppScope
 import ru.mobiledevschool.todoapp.local.entity.asDomainModel
 import ru.mobiledevschool.todoapp.local.ToDoItemsDao
 import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemRequestContainer
+import javax.inject.Inject
+
 /*
 * Единственный репозиторий нашего приложения, управляет данными из БД и удаленного сервиса, готовит
 * их для ViewModel
  */
-class ToDoRepositoryImpl(
+@AppScope
+class ToDoRepositoryImpl @Inject constructor(
     private val itemsDao: ToDoItemsDao,
     private val itemsApi: ItemsApi,
-    private val networkConnectivityObserver: NetworkConnectivityObserver,
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    private val appScope: CoroutineScope
+//    private val networkConnectivityObserver: NetworkConnectivityObserver,
+//    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+//    private val appScope: CoroutineScope
 ) : ToDoRepository {
 
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
     private var revision = 0
 
     private val _exceptionMessageEvent = MutableLiveData<String?>(null)
@@ -35,17 +40,17 @@ class ToDoRepositoryImpl(
 
     private var showDone = true
 
-    init {
-        networkStatusObserving()
-    }
-
-    private fun networkStatusObserving() {
-        appScope.launch {
-            networkConnectivityObserver.observe().collect {
-                //синхронизировать данные с помощью патча если появилась связь
-            }
-        }
-    }
+//    init {
+//        networkStatusObserving()
+//    }
+//
+//    private fun networkStatusObserving() {
+//        appScope.launch {
+//            networkConnectivityObserver.observe().collect {
+//                //синхронизировать данные с помощью патча если появилась связь
+//            }
+//        }
+//    }
 
     fun getAllItems(): Flow<List<ToDoItem>> = itemsDao.getItems().map { it.asDomainModel() }.flowOn(dispatcher)
 

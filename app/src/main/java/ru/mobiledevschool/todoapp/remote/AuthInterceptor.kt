@@ -3,6 +3,8 @@ package ru.mobiledevschool.todoapp.remote
 import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
+
 /*
 * Класс-наследник Interceptor. Добавляет Header для авторизации в каждый запрос. В случае ошибок 404
 * и 500 в ответе, повторяет такие запросы трижды.
