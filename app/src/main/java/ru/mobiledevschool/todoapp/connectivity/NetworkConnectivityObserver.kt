@@ -9,12 +9,13 @@ import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import ru.mobiledevschool.todoapp.connectivity.ConnectivityObserver
+import javax.inject.Inject
 
 /*
 * Класс, имплементация интерфейса [ConnectivityObserver]. В зависимости от состояния сети, формирует
 * соответствующий callback в Flow
  */
-class NetworkConnectivityObserver(
+class NetworkConnectivityObserver @Inject constructor(
     context: Context
 ): ConnectivityObserver {
 

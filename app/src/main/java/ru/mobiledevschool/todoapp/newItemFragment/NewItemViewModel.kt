@@ -6,15 +6,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 import java.util.Calendar
 import java.util.Date
+import javax.inject.Inject
+import javax.inject.Provider
+
 /*
 * ViewModel для NewItemFragment. Содержит состояния для View данного фрагмента, ссылается
 *  на Repository, откуда берет и куда отправляет данные
 * */
-class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
+class NewItemViewModel @Inject constructor(val repo: ToDoRepositoryImpl) : ViewModel() {
 
     private val _item = MutableLiveData<ToDoItem?>(null)
     val item: LiveData<ToDoItem?> = _item
@@ -113,5 +117,17 @@ class NewItemViewModel(private val repo: ToDoRepositoryImpl) : ViewModel() {
             }
             throw IllegalArgumentException("Unable to construct viewModel")
         }
+    }
+}
+
+class ViewModelFactory @Inject constructor(
+    newItemViewModelProvider: Provider<NewItemViewModel>
+) : ViewModelProvider.Factory {
+    private val providers = mapOf<Class<*>, Provider<out ViewModel>>(
+        NewItemViewModel::class.java to newItemViewModelProvider
+    )
+
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        return providers[modelClass]!!.get() as T
     }
 }

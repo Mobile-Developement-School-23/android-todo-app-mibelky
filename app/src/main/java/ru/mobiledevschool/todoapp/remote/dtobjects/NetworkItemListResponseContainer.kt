@@ -13,5 +13,5 @@ data class NetworkItemListResponseContainer(
     @SerializedName("revision")
     val revision: Int
 ) {
-    fun toDTOArray() = list?.map { it.toToDoItemDTO() }?.toTypedArray() ?: emptyArray()
+    fun toEntityArray() = list?.map { it.toEntity() }?.toTypedArray() ?: emptyArray()
 }

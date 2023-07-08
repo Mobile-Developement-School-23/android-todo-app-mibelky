@@ -26,7 +26,7 @@ data class NetworkItem(
     @SerializedName("last_updated_by")
     val lastUpdatedBy: String? = "null"
 ) {
-    fun toToDoItemDTO() = ToDoItemEntity(
+    fun toEntity() = ToDoItemEntity(
         id = this.id,
         text = this.text,
         priority = this.importance.toPriority(),

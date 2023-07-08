@@ -18,6 +18,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.mobiledevschool.todoapp.connectivity.NetworkConnectivityObserver
 import ru.mobiledevschool.todoapp.di.AppComponent
+import ru.mobiledevschool.todoapp.di.AppScope
 import ru.mobiledevschool.todoapp.di.DaggerAppComponent
 import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.newItemFragment.NewItemViewModel
@@ -26,20 +27,24 @@ import ru.mobiledevschool.todoapp.remote.ItemsApi
 import ru.mobiledevschool.todoapp.repo.ToDoRepositoryImpl
 import ru.mobiledevschool.todoapp.work.RefreshDataWorker
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import kotlin.coroutines.CoroutineContext
+
 /**
  * Application class нашего приложения, здесь располагается DI структур нашего приложения с наиболее
  * длительным жизненным циклом
  */
 class ToDoApp : Application() {
     lateinit var appComponent: AppComponent
-         private set
+        private set
+
+    private val applicationScope by lazy { appComponent.applicationScope() }
     override fun onCreate() {
         super.onCreate()
         appComponent = DaggerAppComponent.factory().create(context = this)
+        appComponent.inject(this)
         delayedInit()
     }
-
-    private val applicationScope = CoroutineScope(Dispatchers.Default)
 
     private fun delayedInit() {
         applicationScope.launch {

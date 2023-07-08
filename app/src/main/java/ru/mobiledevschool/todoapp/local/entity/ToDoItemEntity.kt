@@ -3,6 +3,7 @@ package ru.mobiledevschool.todoapp.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItem
 import ru.mobiledevschool.todoapp.repo.ToDoItem
 import java.util.Date
 import java.util.UUID
@@ -29,6 +30,18 @@ data class ToDoItemEntity(
             deadLine = this.deadLine?.let { Date(it) },
             creationDate = Date(this.creationDate),
             editionDate = this.editionDate?.let { Date(it) }
+        )
+    }
+
+    fun toDTO(): NetworkItem {
+        return NetworkItem(
+            id = this.id,
+            text = this.text,
+            completed = this.completed,
+            importance = this.priority.toString(),
+            deadLine = this.deadLine,
+            createdAt = this.creationDate,
+            changedAt = this.editionDate?:this.creationDate
         )
     }
 }

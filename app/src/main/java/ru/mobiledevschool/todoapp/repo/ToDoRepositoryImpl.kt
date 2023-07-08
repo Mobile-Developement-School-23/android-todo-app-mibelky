@@ -7,15 +7,21 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import ru.mobiledevschool.todoapp.connectivity.NetworkConnectivityObserver
 import ru.mobiledevschool.todoapp.di.AppScope
 import ru.mobiledevschool.todoapp.local.entity.asDomainModel
 import ru.mobiledevschool.todoapp.local.ToDoItemsDao
 import ru.mobiledevschool.todoapp.remote.ItemsApi
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItem
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemListRequestContainer
+import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemListResponseContainer
 import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItemRequestContainer
+import java.lang.Exception
 import javax.inject.Inject
 
 /*
@@ -26,12 +32,12 @@ import javax.inject.Inject
 class ToDoRepositoryImpl @Inject constructor(
     private val itemsDao: ToDoItemsDao,
     private val itemsApi: ItemsApi,
-//    private val networkConnectivityObserver: NetworkConnectivityObserver,
-//    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
-//    private val appScope: CoroutineScope
+    private val networkConnectivityObserver: NetworkConnectivityObserver,
+    private val dispatcher: CoroutineDispatcher = Dispatchers.IO,
+    private val appScope: CoroutineScope
 ) : ToDoRepository {
 
-    private val dispatcher: CoroutineDispatcher = Dispatchers.IO
+    //private val dispatcher: CoroutineDispatcher = Dispatchers.IO
     private var revision = 0
 
     private val _exceptionMessageEvent = MutableLiveData<String?>(null)
@@ -40,19 +46,22 @@ class ToDoRepositoryImpl @Inject constructor(
 
     private var showDone = true
 
-//    init {
-//        networkStatusObserving()
-//    }
-//
-//    private fun networkStatusObserving() {
-//        appScope.launch {
-//            networkConnectivityObserver.observe().collect {
-//                //синхронизировать данные с помощью патча если появилась связь
-//            }
-//        }
-//    }
+    init {
+        networkStatusObserving()
+    }
 
-    fun getAllItems(): Flow<List<ToDoItem>> = itemsDao.getItems().map { it.asDomainModel() }.flowOn(dispatcher)
+    private fun networkStatusObserving() {
+        appScope.launch {
+            networkConnectivityObserver.observe().collect {
+                if (it.isAvailable()) {
+                    refreshItems()
+                }
+            }
+        }
+    }
+
+    fun getAllItems(): Flow<List<ToDoItem>> =
+        itemsDao.getItems().map { it.asDomainModel() }.flowOn(dispatcher)
 
     fun getDoneQuantity(): Flow<Int> = itemsDao.getDoneQuantity().flowOn(dispatcher)
 
@@ -78,10 +87,11 @@ class ToDoRepositoryImpl @Inject constructor(
             updateRevision(it.revision)
             withContext(dispatcher) {
                 itemsDao.deleteAllItems()
-                itemsDao.insertAll(*it.toDTOArray())
+                itemsDao.insertAll(*it.toEntityArray())
             }
         }
     }
+
 
     override suspend fun deleteItem(toDoItem: ToDoItem) {
         itemsDao.deleteItemById(toDoItem.id)
@@ -90,12 +100,14 @@ class ToDoRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getItemById(id: String): ToDoItem? = itemsDao.getItemById(id)?.toDomainItem()
+    override suspend fun getItemById(id: String): ToDoItem? =
+        itemsDao.getItemById(id)?.toDomainItem()
 
     override suspend fun changeItem(toDoItem: ToDoItem) {
         itemsDao.saveItem(toDoItem.toDTO())
         val container = NetworkItemRequestContainer(toDoItem.toNetworkItem())
-        safeCall { itemsApi.updateItem(revision, toDoItem.id, container) }.unpack()?.let { updateRevision(it.revision) }
+        safeCall { itemsApi.updateItem(revision, toDoItem.id, container) }.unpack()
+            ?.let { updateRevision(it.revision) }
     }
 
     fun changeVisibility() {
@@ -114,6 +126,13 @@ class ToDoRepositoryImpl @Inject constructor(
 
     private fun <T> Result<T>.unpack(): T? = exceptionOrNull()?.let { exception ->
         startExceptionMessageEvent(messageFrom(exception))
+    appScope.launch { sync(exception) }
         null
     } ?: getOrNull()
+
+    private suspend fun sync(exception: Throwable) = withContext(dispatcher) {
+        if (exception is HttpException && exception.code() in setOf(400, 404)) {
+            refreshItems()
+        }
+    }
 }

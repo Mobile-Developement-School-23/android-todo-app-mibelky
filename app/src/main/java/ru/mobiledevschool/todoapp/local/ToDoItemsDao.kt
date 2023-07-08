@@ -15,7 +15,8 @@ interface ToDoItemsDao {
 
     @Query("SELECT * FROM toDoItems")
     fun getItems(): Flow<List<ToDoItemEntity>>
-
+    @Query("SELECT * FROM toDoItems")
+    suspend fun getItemsList(): List<ToDoItemEntity>
     @Query("SELECT COUNT(*) FROM toDoItems WHERE completed = 1")
     fun getDoneQuantity(): Flow<Int>
 

@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.datepicker.MaterialDatePicker
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -17,6 +18,7 @@ import ru.mobiledevschool.todoapp.R
 import ru.mobiledevschool.todoapp.databinding.FragmentNewItemBinding
 import ru.mobiledevschool.todoapp.di.MainFragmentComponent
 import ru.mobiledevschool.todoapp.di.NewItemFragmentComponent
+import ru.mobiledevschool.todoapp.mainFragment.MainViewModel
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindDeadLineDate
 import ru.mobiledevschool.todoapp.mainFragment.recycler.bindPriorityText
@@ -34,7 +36,9 @@ class NewItemFragment : Fragment() {
 
     private lateinit var binding: FragmentNewItemBinding
 
-    val viewModel by viewModel<NewItemViewModel>()
+    private val viewModel: NewItemViewModel by viewModels {
+        component.viewModelsFactory()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
