@@ -1,7 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.ToDoApp" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/back_dark_primary</item>
+        <item name="colorOnPrimary">@color/label_dark_primary</item>
+        <item name="colorSecondary">@color/back_dark_secondary</item>
+        <item name="colorOnSecondary">@color/label_dark_secondary</item>
+        <item name="colorLabelTertiary">@color/label_dark_tertiary</item>
+        <item name="colorPriorityHigh">@color/color_dark_red</item>
+        <item name="colorPriorityLow">@color/color_dark_gray</item>
+        <item name="colorPurpleAccent">@color/color_dark_blue</item>
+        <item name="colorGreenAccent">@color/color_dark_green</item>
+        <item name="colorDisabled">@color/label_dark_disable</item>
     </style>
 </resources>
