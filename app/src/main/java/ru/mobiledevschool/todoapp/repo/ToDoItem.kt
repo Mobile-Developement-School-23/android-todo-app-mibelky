@@ -2,6 +2,7 @@ package ru.mobiledevschool.todoapp.repo
 
 import ru.mobiledevschool.todoapp.local.entity.ToDoItemEntity
 import ru.mobiledevschool.todoapp.remote.dtobjects.NetworkItem
+import java.io.Serializable
 import java.util.Date
 import java.util.UUID
 
@@ -16,7 +17,7 @@ data class ToDoItem(
     var deadLine: Date? = null,
     val creationDate: Date,
     val editionDate: Date?
-) {
+): Serializable {
     enum class Priority {
         LOW, NORMAL, HIGH;
 
