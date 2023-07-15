@@ -48,6 +48,7 @@ import kotlin.coroutines.CoroutineContext
 class ToDoApp : Application() {
     lateinit var appComponent: AppComponent
         private set
+
     @Inject
     lateinit var dao: ToDoItemsDao
 
@@ -85,16 +86,27 @@ class ToDoApp : Application() {
         // adding intent and pending intent to go to AlarmReceiver Class in future
 
         applicationScope.launch {
-            val toDoS : List<ToDoItem>  = dao.getItemsList().asDomainModel().filter {
+            val toDoS: List<ToDoItem> = dao.getItemsList().asDomainModel().filter {
                 !it.completed && it.deadLine != null
             }
             for (toDo in toDoS) {
                 val intent = Intent(applicationContext, AlarmReceiver::class.java)
                 intent.putExtra("toDo", toDo)
-                val pendingIntent = PendingIntent.getBroadcast(applicationContext, toDo.hashCode(), intent, PendingIntent.FLAG_IMMUTABLE)
+                val pendingIntent = PendingIntent.getBroadcast(
+                    applicationContext,
+                    toDo.hashCode(),
+                    intent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
                 val mainActivityIntent = Intent(applicationContext, MainActivity::class.java)
-                val basicPendingIntent = PendingIntent.getActivity(applicationContext, toDo.hashCode(), mainActivityIntent, PendingIntent.FLAG_IMMUTABLE)
-                val clockInfo = AlarmManager.AlarmClockInfo(toDo.deadLine!!.time, basicPendingIntent)
+                val basicPendingIntent = PendingIntent.getActivity(
+                    applicationContext,
+                    toDo.hashCode(),
+                    mainActivityIntent,
+                    PendingIntent.FLAG_IMMUTABLE
+                )
+                val clockInfo =
+                    AlarmManager.AlarmClockInfo(toDo.deadLine!!.time, basicPendingIntent)
                 alarmManager.setAlarmClock(clockInfo, pendingIntent)
             }
         }

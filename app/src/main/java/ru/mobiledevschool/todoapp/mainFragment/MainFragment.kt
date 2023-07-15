@@ -61,52 +61,50 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
         component.viewModelsFactory()
     }
 
-    // Register the permissions callback, which handles the user's response to the
-// system permissions dialog. Save the return value, an instance of
-// ActivityResultLauncher. You can use either a val, as shown in this snippet,
-// or a lateinit var in your onAttach() or onCreate() method.
-    val requestPermissionLauncher =
-        registerForActivityResult(
-            ActivityResultContracts.RequestPermission()
-        ) { isGranted: Boolean ->
-            if (isGranted) {
-                // Permission is granted. Continue the action or workflow in your
-                // app.
-            } else {
-                // Explain to the user that the feature is unavailable because the
-                // feature requires a permission that the user has denied. At the
-                // same time, respect the user's decision. Don't link to system
-                // settings in an effort to convince the user to change their
-                // decision.
-            }
-        }
+//    private val requestPermissionLauncher =
+//        registerForActivityResult(
+//            ActivityResultContracts.RequestPermission()
+//        ) { isGranted: Boolean ->
+//            if (!isGranted) {
+//
+//                Snackbar.make(
+//                    binding.root,
+//                    "Нотификации помогут вам не пропустить запланированное.",
+//                    Snackbar.LENGTH_INDEFINITE
+//                )
+//                    .setAction("Разрешить") { requestPermissionLauncher.launch(
+//                        android.Manifest.permission.POST_NOTIFICATIONS
+//                    ) }
+//                    .show()}
+//        }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        when {
-            ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED -> {
-                // You can use the API that requires the permission.
-            }
-            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
-            // In an educational UI, explain to the user why your app requires this
-            // permission for a specific feature to behave as expected, and what
-            // features are disabled if it's declined. In this UI, include a
-            // "cancel" or "no thanks" button that lets the user continue
-            // using your app without granting the permission.
-            //showInContextUI(...)
-        }
-            else -> {
-                // You can directly ask for the permission.
-                // The registered ActivityResultCallback gets the result of this request.
-                requestPermissionLauncher.launch(
-                    Manifest.permission.POST_NOTIFICATIONS)
-            }
-        }
+//        when {
+//            ContextCompat.checkSelfPermission(
+//                requireContext(),
+//                Manifest.permission.POST_NOTIFICATIONS
+//            ) == PackageManager.PERMISSION_GRANTED -> {
+//                // You can use the API that requires the permission.
+//            }
+//
+//            shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS) -> {
+//                Snackbar.make(
+//                    binding.root,
+//                    "Нотификации помогут вам не пропустить запланированное.",
+//                    Snackbar.LENGTH_LONG
+//                )
+//                    .setAction("Разрешить") { requestPermissionLauncher.launch(
+//                        Manifest.permission.POST_NOTIFICATIONS
+//                    ) }
+//                    .show()
+//            }
+//
+//            else -> {
+//            }
+//        }
 
         component = (activity as MainActivity).activityComponent.mainFragmentComponent()
         component.inject(this)
@@ -244,45 +242,13 @@ class MainFragment : Fragment(), ToDoListTouchHelper.SetupTaskBySwipe {
     }
 
 
-
     private fun notificationPermissionFlow() {
         if (ActivityCompat.checkSelfPermission(
                 requireContext(),
-                android.Manifest.permission.POST_NOTIFICATIONS
+                Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
         ) {
 
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val manager =
-                requireActivity().getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            initializeGroups(manager)
-            initializeChannels(manager)
-        }
     }
-
-    private fun initializeGroups(manager: NotificationManager) {
-        manager.createNotificationChannelGroup(
-            NotificationChannelGroup(
-                "To-do",
-                "To-do task group"
-            )
-        )
-    }
-
-    private fun initializeChannels(manager: NotificationManager) {
-        val channel = NotificationChannel(
-            "To-do channel",
-            "To-do channel",
-            NotificationManager.IMPORTANCE_HIGH
-        )
-        channel.apply {
-            description = "Channel description"
-            enableVibration(true)
-            group = "To-do"
-        }
-        manager.createNotificationChannel(channel)
-    }
-
-
 }
